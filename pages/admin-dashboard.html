@@ -885,7 +885,7 @@
             }
 
             try {
-                const response = await fetch('/api/admin/dashboard-stats', {
+                const response = await fetch(CONFIG.API_BASE_URL + '/api/admin/dashboard-stats', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -930,7 +930,7 @@
                 
                 switch(section) {
                     case 'users':
-                        const usersResponse = await fetch('/api/admin/users', {
+                        const usersResponse = await fetch(CONFIG.API_BASE_URL + '/api/admin/users', {
                             method: 'GET',
                             headers: {
                                 'Authorization': `Bearer ${token}`,
@@ -977,7 +977,7 @@
                         break;
                         
                     case 'transactions':
-                        const transactionsResponse = await fetch('/api/admin/transactions', {
+                        const transactionsResponse = await fetch(CONFIG.API_BASE_URL + '/api/admin/transactions', {
                             method: 'GET',
                             headers: {
                                 'Authorization': `Bearer ${token}`,
@@ -1024,7 +1024,7 @@
                         break;
                         
                     case 'withdrawals':
-                        const withdrawalsResponse = await fetch('/api/admin/withdrawals', {
+                        const withdrawalsResponse = await fetch(CONFIG.API_BASE_URL + '/api/admin/withdrawals', {
                             method: 'GET',
                             headers: {
                                 'Authorization': `Bearer ${token}`,
@@ -1076,7 +1076,7 @@
                         break;
                         
                     case 'recharges':
-                        const rechargesResponse = await fetch('/api/admin/recharges', {
+                        const rechargesResponse = await fetch(CONFIG.API_BASE_URL + '/api/admin/recharges', {
                             method: 'GET',
                             headers: {
                                 'Authorization': `Bearer ${token}`,
@@ -1128,7 +1128,7 @@
                         break;
                         
                     case 'products':
-                        const productsResponse = await fetch('/api/admin/products', {
+                        const productsResponse = await fetch(CONFIG.API_BASE_URL + '/api/admin/products', {
                             method: 'GET',
                             headers: {
                                 'Authorization': `Bearer ${token}`,
@@ -1170,7 +1170,7 @@
                         break;
                         
                     case 'referrals':
-                        const referralsResponse = await fetch('/api/admin/referrals', {
+                        const referralsResponse = await fetch(CONFIG.API_BASE_URL + '/api/admin/referrals', {
                             method: 'GET',
                             headers: {
                                 'Authorization': `Bearer ${token}`,
@@ -1253,7 +1253,7 @@
 
             try {
                 // Update the withdrawal status
-                const response = await fetch(CONFIG.API_BASE_URL + "/api/admin/withdrawal/${withdrawalId}`, {
+                const response = await fetch(`${CONFIG.API_BASE_URL}/api/admin/withdrawal/${withdrawalId}`, {
                     method: 'PUT',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -1290,7 +1290,7 @@
             let utrNumber = rechargeId;
             
             try {
-                const response = await fetch('/api/admin/verify-utr', {
+                const response = await fetch(CONFIG.API_BASE_URL + '/api/admin/verify-utr', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -1397,7 +1397,7 @@
             const reason = document.getElementById('reason').value;
             
             try {
-                const response = await fetch(CONFIG.API_BASE_URL + "/api/admin/user/${userId}/balance`, {
+                const response = await fetch(`${CONFIG.API_BASE_URL}/api/admin/user/${userId}/balance`, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -1445,7 +1445,7 @@
             const action = selectedAction.value;
             
             try {
-                const response = await fetch('/api/admin/verify-utr', {
+                const response = await fetch(CONFIG.API_BASE_URL + '/api/admin/verify-utr', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -1514,7 +1514,7 @@
                     updateData.password = password;
                 }
 
-                const response = await fetch(CONFIG.API_BASE_URL + "/api/admin/user/${userId}`, {
+                const response = await fetch(`${CONFIG.API_BASE_URL}/api/admin/user/${userId}`, {
                     method: 'PUT',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -1557,7 +1557,7 @@
             }
 
             try {
-                const response = await fetch('/api/admin/process-investment-rebate', {
+                const response = await fetch(CONFIG.API_BASE_URL + '/api/admin/process-investment-rebate', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -1615,7 +1615,7 @@
             try {
                 if (id) {
                     // Update existing product
-                    const response = await fetch(CONFIG.API_BASE_URL + "/api/admin/products/${id}`, {
+                    const response = await fetch(`${CONFIG.API_BASE_URL}/api/admin/products/${id}`, {
                         method: 'PUT',
                         headers: {
                             'Authorization': `Bearer ${token}`,
@@ -1640,7 +1640,7 @@
                     }
                 } else {
                     // Create new product
-                    const response = await fetch('/api/admin/products', {
+                    const response = await fetch(CONFIG.API_BASE_URL + '/api/admin/products', {
                         method: 'POST',
                         headers: {
                             'Authorization': `Bearer ${token}`,
