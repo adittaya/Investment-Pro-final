@@ -90,6 +90,8 @@
             const data = Object.fromEntries(formData);
             
             try {
+                console.log('Attempting to login with:', data);
+                console.log('API Base URL:', CONFIG.API_BASE_URL);
                 const response = await fetch(CONFIG.API_BASE_URL + '/api/auth/login', {
                     method: 'POST',
                     headers: {
@@ -98,7 +100,9 @@
                     body: JSON.stringify(data)
                 });
                 
+                console.log('Response status:', response.status);
                 const result = await response.json();
+                console.log('Response data:', result);
                 
                 if (response.ok) {
                     // Save token to localStorage
@@ -116,7 +120,7 @@
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('An error occurred during login');
+                alert('An error occurred during login: ' + error.message);
             }
         });
     </script>
