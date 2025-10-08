@@ -131,6 +131,7 @@
         </div>
     </div>
 
+    <script src="config.js"></script>
     <script>
         document.getElementById('registrationForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -139,7 +140,7 @@
             const data = Object.fromEntries(formData);
             
             try {
-                const response = await fetch('/api/auth/register', {
+                const response = await fetch(CONFIG.API_BASE_URL + '/api/auth/register', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

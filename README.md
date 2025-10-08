@@ -99,7 +99,7 @@ This is a demo platform created for educational purposes. It is not a real inves
 
 ## Deployment
 
-### Deploy to Render
+### Backend Deployment to Render
 
 This application can be deployed to Render with the following steps:
 
@@ -119,14 +119,37 @@ This application can be deployed to Render with the following steps:
 
 For detailed deployment instructions, see RENDER_DEPLOYMENT.md
 
+### Frontend Deployment to Netlify
+
+To deploy the frontend to Netlify:
+
+1. Go to https://app.netlify.com and create an account
+2. Click "New site from Git" and connect your GitHub repository
+3. Select your repository (adittaya/Investment-Pro-final)
+4. Configure the build settings:
+   - Build Command: `echo "Frontend only deployment"` (or leave empty)
+   - Publish directory: `pages`
+   - Branch to deploy: `main`
+5. Deploy the site
+
+Alternatively, you can:
+- Use the Netlify CLI: `netlify deploy`
+- Drag and drop the `pages/` directory contents to https://app.netlify.com/drop
+
+For detailed Netlify deployment instructions, see NETLIFY_DEPLOYMENT.md
+
 ### Environment Variables
 
 The application requires the following environment variables:
 
+**Backend (Render):**
 - `SUPABASE_URL` - Your Supabase project URL
 - `SUPABASE_ACCES_KEY` - Your Supabase access key
 - `SUPABASE_API_KEY` - Your Supabase API key
 - `JWT_SECRET` - Secret for JSON Web Token signing
 - `PORT` - Port number (automatically set by Render)
+
+**Frontend (Netlify) - if needed:**
+- `VITE_API_BASE_URL` - Your backend API URL (https://investment-pro-backend-fe0b.onrender.com)
 
 See `.env.example` for reference format.
