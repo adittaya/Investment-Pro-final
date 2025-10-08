@@ -1,7 +1,11 @@
 const express = require('express');
 const path = require('path');
+const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Enable CORS for all origins (in production, you should restrict this to your frontend domain)
+app.use(cors());
 
 // Middleware to parse JSON bodies
 app.use(express.json());
