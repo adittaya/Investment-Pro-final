@@ -1,17 +1,17 @@
 // Supabase Configuration
-const SUPABASE_URL = 'https://wmzykidfnmocxzmgbbph.supabase.co';
-const SUPABASE_ACCES_KEY = 'YOUR_SUPABASE_ACCESS_KEY';
-const SUPABASE_API_KEY = 'YOUR_SUPABASE_API_KEY';
-const JWT_SECRET = 'YOUR_JWT_SECRET';
+const SUPABASE_URL = process.env.SUPABASE_URL || 'YOUR_SUPABASE_URL';
+const SUPABASE_ACCES_KEY = process.env.SUPABASE_ACCES_KEY || 'YOUR_SUPABASE_ACCESS_KEY';
+const SUPABASE_API_KEY = process.env.SUPABASE_API_KEY || 'YOUR_SUPABASE_API_KEY';
+const JWT_SECRET = process.env.JWT_SECRET || 'YOUR_JWT_SECRET';
 
 // Render API Key
-const RENDER_API_KEY = 'YOUR_RENDER_API_KEY';
+const RENDER_API_KEY = process.env.RENDER_API_KEY || 'YOUR_RENDER_API_KEY';
 
 // Netlify Auth Token
-const NETLIFY_AUTH_TOKEN = 'YOUR_NETLIFY_AUTH_TOKEN';
+const NETLIFY_AUTH_TOKEN = process.env.NETLIFY_AUTH_TOKEN || 'YOUR_NETLIFY_AUTH_TOKEN';
 
 // GitHub Token
-const GITHUB_TOKEN = 'YOUR_GITHUB_TOKEN';
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN || 'YOUR_GITHUB_TOKEN';
 
 module.exports = {
   SUPABASE_URL,

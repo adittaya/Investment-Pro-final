@@ -1,0 +1,19 @@
+node_modules/
+.env
+config.local.js
+*.log
+.DS_Store
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+coverage/
+*.local
+
+# Ignore system files
+Thumbs.db
+ehthumbs.db
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs_vista.db
