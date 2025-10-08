@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InvestPro - Investment Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        .card {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .btn-secondary {
+            background: linear-gradient(135deg, #36d1dc 0%, #5b86e5 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .logo {
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.8rem;
+        }
+        .feature-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        }
+        .stats-card {
+            background: linear-gradient(135deg, #36d1dc 0%, #5b86e5 100%);
+            color: white;
+        }
+        .testimonial-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm py-4 px-6">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="logo">InvestPro</div>
+            <nav>
+                <ul class="flex space-x-6">
+                    <li><a href="index.html" class="text-blue-600 font-medium">Home</a></li>
+                    <li><a href="login.html" class="text-gray-700 hover:text-blue-600 font-medium">Login</a></li>
+                    <li><a href="register.html" class="text-gray-700 hover:text-blue-600 font-medium">Register</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="py-16 px-4">
+        <div class="max-w-7xl mx-auto text-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-6">Maximize Your Investment Returns</h1>
+            <p class="text-xl text-white opacity-90 max-w-3xl mx-auto mb-10">Join thousands of investors earning daily profits with our secure and transparent investment platform</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="register.html" class="btn-primary py-4 px-8 text-white font-bold rounded-lg text-lg">
+                    Start Investing Now
+                </a>
+                <a href="login.html" class="btn-secondary py-4 px-8 text-white font-bold rounded-lg text-lg">
+                    Login to Account
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Indicators -->
+    <section class="py-8 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 items-center justify-items-center">
+                <div class="flex flex-col items-center">
+                    <div class="bg-gray-100 p-4 rounded-full shadow-md">
+                        <i class="fas fa-landmark text-blue-600 text-3xl"></i>
+                    </div>
+                    <p class="mt-2 text-sm font-medium text-gray-700">RBI Registered</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="bg-gray-100 p-4 rounded-full shadow-md">
+                        <i class="fas fa-globe-asia text-green-600 text-3xl"></i>
+                    </div>
+                    <p class="mt-2 text-sm font-medium text-gray-700">World Bank Approved</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="bg-gray-100 p-4 rounded-full shadow-md">
+                        <i class="fas fa-certificate text-yellow-600 text-3xl"></i>
+                    </div>
+                    <p class="mt-2 text-sm font-medium text-gray-700">ISO Certified</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="bg-gray-100 p-4 rounded-full shadow-md">
+                        <i class="fas fa-users text-purple-600 text-3xl"></i>
+                    </div>
+                    <p class="mt-2 text-sm font-medium text-gray-700">10M+ Users</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="bg-gray-100 p-4 rounded-full shadow-md">
+                        <i class="fas fa-rupee-sign text-red-600 text-3xl"></i>
+                    </div>
+                    <p class="mt-2 text-sm font-medium text-gray-700">₹10 Crore Withdrawn</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="bg-gray-100 p-4 rounded-full shadow-md">
+                        <i class="fas fa-shield-alt text-indigo-600 text-3xl"></i>
+                    </div>
+                    <p class="mt-2 text-sm font-medium text-gray-700">Government Verified</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-16 px-4">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-3xl font-bold text-white text-center mb-12">Platform Statistics</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="stats-card card p-6 text-center">
+                    <i class="fas fa-users text-4xl mb-4"></i>
+                    <p class="text-4xl font-bold">10,000+</p>
+                    <p class="text-lg">Active Investors</p>
+                </div>
+                <div class="stats-card card p-6 text-center">
+                    <i class="fas fa-rupee-sign text-4xl mb-4"></i>
+                    <p class="text-4xl font-bold">₹50 Cr+</p>
+                    <p class="text-lg">Total Withdrawn</p>
+                </div>
+                <div class="stats-card card p-6 text-center">
+                    <i class="fas fa-chart-line text-4xl mb-4"></i>
+                    <p class="text-4xl font-bold">100%</p>
+                    <p class="text-lg">Success Rate</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-16 px-4 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-3xl font-bold text-gray-800 text-center mb-12">Investment Features</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="feature-card card p-6">
+                    <div class="bg-blue-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mb-4">
+                        <i class="fas fa-bolt text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Instant Withdrawals</h3>
+                    <p class="text-gray-600">Withdraw your profits quickly and securely through bank transfer or UPI</p>
+                </div>
+                
+                <div class="feature-card card p-6">
+                    <div class="bg-green-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mb-4">
+                        <i class="fas fa-shield-alt text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">100% Secure</h3>
+                    <p class="text-gray-600">Bank-level security with encrypted transactions and verified processes</p>
+                </div>
+                
+                <div class="feature-card card p-6">
+                    <div class="bg-purple-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mb-4">
+                        <i class="fas fa-chart-line text-purple-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Daily Profits</h3>
+                    <p class="text-gray-600">Earn consistent daily returns on your investments</p>
+                </div>
+                
+                <div class="feature-card card p-6">
+                    <div class="bg-yellow-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mb-4">
+                        <i class="fas fa-gift text-yellow-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Referral Bonus</h3>
+                    <p class="text-gray-600">Earn up to 32% commission on your referrals' investments</p>
+                </div>
+                
+                <div class="feature-card card p-6">
+                    <div class="bg-red-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mb-4">
+                        <i class="fas fa-mobile-alt text-red-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Mobile Friendly</h3>
+                    <p class="text-gray-600">Full-featured platform accessible on any device</p>
+                </div>
+                
+                <div class="feature-card card p-6">
+                    <div class="bg-indigo-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mb-4">
+                        <i class="fas fa-rupee-sign text-indigo-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Multiple Plans</h3>
+                    <p class="text-gray-600">Choose from 10 different investment plans with varying returns</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Investment Plans Preview -->
+    <section class="py-16 px-4">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-3xl font-bold text-white text-center mb-12">Investment Plans</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="feature-card card p-6 text-center">
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Starter Plan</h3>
+                    <div class="text-3xl font-bold text-blue-600 mb-2">₹490</div>
+                    <p class="text-gray-600 mb-4">Get ₹80 daily for 9 days</p>
+                    <div class="text-green-600 font-bold">Total: ₹720</div>
+                </div>
+                
+                <div class="feature-card card p-6 text-center">
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Smart Saver</h3>
+                    <div class="text-3xl font-bold text-blue-600 mb-2">₹750</div>
+                    <p class="text-gray-600 mb-4">Get ₹85 daily for 14 days</p>
+                    <div class="text-green-600 font-bold">Total: ₹1,190</div>
+                </div>
+                
+                <div class="feature-card card p-6 text-center">
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Gold Income</h3>
+                    <div class="text-3xl font-bold text-blue-600 mb-2">₹2,000</div>
+                    <p class="text-gray-600 mb-4">Get ₹135 daily for 23 days</p>
+                    <div class="text-green-600 font-bold">Total: ₹3,105</div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-10">
+                <a href="register.html" class="btn-primary py-3 px-8 text-white font-bold rounded-lg text-lg inline-block">
+                    View All Plans
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-16 px-4 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-3xl font-bold text-gray-800 text-center mb-12">What Our Investors Say</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="testimonial-card card p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16" />
+                        <div class="ml-4">
+                            <h4 class="font-bold text-gray-800">Rajesh K</h4>
+                            <p class="text-gray-600">Investor since 2024</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic">"I've been using InvestPro for 6 months now and have consistently earned daily returns. The platform is transparent and trustworthy."</p>
+                </div>
+                
+                <div class="testimonial-card card p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16" />
+                        <div class="ml-4">
+                            <h4 class="font-bold text-gray-800">Priya M</h4>
+                            <p class="text-gray-600">Investor since 2024</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic">"The referral program is amazing! I've earned over ₹5000 just from referring friends. The withdrawal process is smooth and fast."</p>
+                </div>
+                
+                <div class="testimonial-card card p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16" />
+                        <div class="ml-4">
+                            <h4 class="font-bold text-gray-800">Amit S</h4>
+                            <p class="text-gray-600">Investor since 2024</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic">"Finally found a platform where I can trust with my money. The investment plans are very profitable and the customer service is excellent."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 px-4">
+        <div class="max-w-4xl mx-auto text-center bg-white bg-opacity-20 backdrop-blur-lg rounded-2xl p-10">
+            <h2 class="text-3xl font-bold text-white mb-6">Ready to Start Your Investment Journey?</h2>
+            <p class="text-xl text-white opacity-90 mb-8">Join thousands of investors earning daily profits with InvestPro</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="register.html" class="btn-primary py-4 px-8 text-white font-bold rounded-lg text-lg">
+                    Create Account
+                </a>
+                <a href="login.html" class="bg-white text-purple-700 hover:bg-gray-100 py-4 px-8 font-bold rounded-lg text-lg">
+                    Login to Existing Account
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-gray-600">
+            <p class="text-lg font-bold mb-2">InvestPro</p>
+            <p class="mb-4">Secure Investment Platform | Trusted by thousands of investors</p>
+            <div class="flex justify-center space-x-6 mb-4">
+                <a href="#" class="text-gray-600 hover:text-blue-600"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="text-gray-600 hover:text-blue-600"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-gray-600 hover:text-blue-600"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="text-gray-600 hover:text-blue-600"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+            <p>© 2025 InvestPro. All rights reserved.</p>
+            <p class="mt-2">This is a demo platform. Not a real investment service.</p>
+        </div>
+    </footer>
+</body>
+</html>

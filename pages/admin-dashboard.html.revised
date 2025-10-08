@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - InvestPro</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f3f4f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        .sidebar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .admin-card {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #48c78e 0%, #3a7d68 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #f14668 0%, #c13554 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .admin-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .active-nav {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-left: 4px solid white;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        }
+        .input-field:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+        .section-content {
+            display: none;
+        }
+        .section-content.active {
+            display: block;
+        }
+        .table-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body class="flex">
+    <!-- Sidebar -->
+    <div class="sidebar w-64 text-white fixed h-full">
+        <div class="p-5">
+            <h1 class="text-2xl font-bold">Admin Panel</h1>
+        </div>
+        <nav class="mt-5">
+            <a href="#" data-section="dashboard" class="nav-link active-nav block py-3 px-5 text-white font-medium">
+                <i class="fas fa-tachometer-alt mr-3"></i>Dashboard
+            </a>
+            <a href="#" data-section="users" class="nav-link block py-3 px-5 text-white hover:bg-purple-700 font-medium">
+                <i class="fas fa-users mr-3"></i>Manage Users
+            </a>
+            <a href="#" data-section="transactions" class="nav-link block py-3 px-5 text-white hover:bg-purple-700 font-medium">
+                <i class="fas fa-exchange-alt mr-3"></i>Transactions
+            </a>
+            <a href="#" data-section="withdrawals" class="nav-link block py-3 px-5 text-white hover:bg-purple-700 font-medium">
+                <i class="fas fa-download mr-3"></i>Withdrawals
+            </a>
+            <a href="#" data-section="recharges" class="nav-link block py-3 px-5 text-white hover:bg-purple-700 font-medium">
+                <i class="fas fa-upload mr-3"></i>Recharges
+            </a>
+            <a href="#" data-section="products" class="nav-link block py-3 px-5 text-white hover:bg-purple-700 font-medium">
+                <i class="fas fa-box mr-3"></i>Products
+            </a>
+            <a href="#" data-section="referrals" class="nav-link block py-3 px-5 text-white hover:bg-purple-700 font-medium">
+                <i class="fas fa-user-friends mr-3"></i>Referrals
+            </a>
+            <a href="#" data-section="settings" class="nav-link block py-3 px-5 text-white hover:bg-purple-700 font-medium">
+                <i class="fas fa-cog mr-3"></i>Settings
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-grow ml-64">
+        <!-- Admin Header -->
+        <div class="admin-header py-4 px-6 flex justify-between items-center">
+            <h2 class="text-xl font-bold">Admin Dashboard</h2>
+            <div class="flex items-center space-x-4">
+                <span>Welcome, Admin</span>
+                <button id="logoutBtn" class="bg-white text-purple-700 hover:bg-gray-100 px-4 py-2 rounded-lg">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div class="p-6">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="stat-card admin-card p-6">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-gray-600">Total Users</p>
+                            <p class="text-3xl font-bold mt-1" id="totalUsers">0</p>
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded-full">
+                            <i class="fas fa-users text-blue-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card admin-card p-6">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-gray-600">Active Products</p>
+                            <p class="text-3xl font-bold mt-1" id="activeProducts">0</p>
+                        </div>
+                        <div class="bg-green-100 p-3 rounded-full">
+                            <i class="fas fa-chart-line text-green-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card admin-card p-6">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-gray-600">Total Recharges</p>
+                            <p class="text-3xl font-bold mt-1" id="totalRecharges">₹0.00</p>
+                        </div>
+                        <div class="bg-purple-100 p-3 rounded-full">
+                            <i class="fas fa-rupee-sign text-purple-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card admin-card p-6">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-gray-600">Pending Withdrawals</p>
+                            <p class="text-3xl font-bold mt-1" id="pendingWithdrawals">0</p>
+                        </div>
+                        <div class="bg-yellow-100 p-3 rounded-full">
+                            <i class="fas fa-download text-yellow-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                <!-- Add Balance -->
+                <div class="stat-card admin-card p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Add Balance to User</h3>
+                    <form id="addBalanceForm">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="userId">
+                                User ID
+                            </label>
+                            <input type="text" id="userId" name="user_id" required
+                                class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="amount">
+                                Amount
+                            </label>
+                            <input type="number" id="amount" name="amount" required
+                                class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="reason">
+                                Reason
+                            </label>
+                            <input type="text" id="reason" name="reason" required
+                                class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <button type="submit" class="btn-primary w-full py-3 px-4 text-white font-bold rounded-lg">
+                            Add Balance
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Verify UTR -->
+                <div class="stat-card admin-card p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Verify Recharge UTR</h3>
+                    <form id="verifyUtrForm">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="utr">
+                                UTR Number
+                            </label>
+                            <input type="text" id="utr" name="utr" required
+                                class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <button type="submit" name="action" value="approve" class="btn-success w-full py-2 px-4 text-white font-bold rounded-lg">
+                                    Approve
+                                </button>
+                            </div>
+                            <div>
+                                <button type="submit" name="action" value="reject" class="btn-danger w-full py-2 px-4 text-white font-bold rounded-lg">
+                                    Reject
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Control Popup -->
+                <div class="stat-card admin-card p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Popup Controls</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Popup Status</label>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="popupToggle" class="mr-2 h-5 w-5 text-blue-600 rounded">
+                                <label for="popupToggle" class="text-gray-700">Enable fake withdrawals popup</label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="popupInterval">
+                                Popup Interval (seconds)
+                            </label>
+                            <input type="number" id="popupInterval" value="10" min="5" max="60"
+                                class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <button id="updatePopupBtn" class="btn-primary w-full py-3 px-4 text-white font-bold rounded-lg">
+                            Update Settings
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- All Sections - Only one will be visible at a time -->
+            <!-- Dashboard Section -->
+            <div id="section-dashboard" class="section-content active">
+                <div class="stat-card admin-card p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Recent Activity</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="activityTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Activity data will be loaded here -->
+                                <tr>
+                                    <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                                        Navigate to different sections using the sidebar
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Section -->
+            <div id="section-users" class="section-content">
+                <div class="stat-card admin-card p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Manage Users</h3>
+                    <div class="table-container">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Balance</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Invested</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Users data will be loaded here -->
+                                <tr>
+                                    <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                        Loading users...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transactions Section -->
+            <div id="section-transactions" class="section-content">
+                <div class="stat-card admin-card p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">All Transactions</h3>
+                    <div class="table-container">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User ID</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactionsTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Transactions data will be loaded here -->
+                                <tr>
+                                    <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                        Loading transactions...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Withdrawals Section -->
+            <div id="section-withdrawals" class="section-content">
+                <div class="stat-card admin-card p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Withdrawal Requests</h3>
+                    <div class="table-container">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User ID</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Method</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="withdrawalsTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Withdrawals data will be loaded here -->
+                                <tr>
+                                    <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                                        Loading withdrawals...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recharges Section -->
+            <div id="section-recharges" class="section-content">
+                <div class="stat-card admin-card p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Recharge Requests</h3>
+                    <div class="table-container">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User ID</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rechargesTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Recharges data will be loaded here -->
+                                <tr>
+                                    <td colspan="4" class="px-6 py-4 text-center text-gray-500">
+                                        Loading recharges...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Section -->
+            <div id="section-products" class="section-content">
+                <div class="stat-card admin-card p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Investment Products</h3>
+                    <div class="table-container">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Daily Income</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Profit</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Products data will be loaded here -->
+                                <tr>
+                                    <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                                        Loading products...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Referrals Section -->
+            <div id="section-referrals" class="section-content">
+                <div class="stat-card admin-card p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Referral Tracking</h3>
+                    <div class="table-container">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User Name</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Referrer ID</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Referral Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="referralsTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Referrals data will be loaded here -->
+                                <tr>
+                                    <td colspan="4" class="px-6 py-4 text-center text-gray-500">
+                                        Loading referrals...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div id="section-settings" class="section-content">
+                <div class="stat-card admin-card p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Admin Settings</h3>
+                    <div class="space-y-6">
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <h4 class="font-medium text-gray-800 mb-2">Platform Settings</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Minimum Withdrawal Amount</label>
+                                    <input type="number" value="100" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Maximum Daily Withdrawal</label>
+                                    <input type="number" value="10000" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <h4 class="font-medium text-gray-800 mb-2">Security Settings</h4>
+                            <div class="flex items-center mb-2">
+                                <input type="checkbox" id="2fa" class="mr-2 h-5 w-5 text-blue-600 rounded">
+                                <label for="2fa" class="text-gray-700">Enable 2FA for admin accounts</label>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <input type="checkbox" id="login-alerts" class="mr-2 h-5 w-5 text-blue-600 rounded">
+                                <label for="login-alerts" class="text-gray-700">Send alerts for admin logins</label>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <h4 class="font-medium text-gray-800 mb-2">Maintenance Mode</h4>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="maintenance" class="mr-2 h-5 w-5 text-blue-600 rounded">
+                                <label for="maintenance" class="text-gray-700">Enable maintenance mode (users will see maintenance page)</label>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-end">
+                            <button class="btn-primary py-2 px-6 text-white font-bold rounded-lg">
+                                Save Settings
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to get token from localStorage
+        function getToken() {
+            return localStorage.getItem('token');
+        }
+
+        // Function to check if user is admin
+        function checkAdmin() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!user || !user.is_admin) {
+                alert('Admin access required');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Function to switch between sections
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section-content').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show the requested section
+            const sectionToShow = document.getElementById(`section-${sectionId}`);
+            if (sectionToShow) {
+                sectionToShow.classList.add('active');
+            }
+            
+            // Update active nav link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active-nav');
+            });
+            
+            const activeLink = document.querySelector(`[data-section="${sectionId}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active-nav');
+            }
+        }
+
+        // Navigation functionality
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const section = this.getAttribute('data-section');
+                if (section) {
+                    showSection(section);
+                    loadSection(section);
+                }
+            });
+        });
+
+        // Load admin stats from API
+        async function loadAdminStats() {
+            const token = getToken();
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/admin/dashboard-stats', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const stats = await response.json();
+                    document.getElementById('totalUsers').textContent = stats.totalUsers;
+                    document.getElementById('activeProducts').textContent = stats.activeProducts;
+                    document.getElementById('totalRecharges').textContent = `₹${parseFloat(stats.totalRecharges).toLocaleString('en-IN')}`;
+                    document.getElementById('pendingWithdrawals').textContent = stats.pendingWithdrawals;
+                } else {
+                    console.error('Failed to load stats:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error loading admin stats:', error);
+            }
+        }
+
+        // Load specific section data
+        async function loadSection(section) {
+            const token = getToken();
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                let data;
+                let tableBody;
+                
+                switch(section) {
+                    case 'users':
+                        const usersResponse = await fetch('/api/admin/users', {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        data = await usersResponse.json();
+                        tableBody = document.getElementById('usersTableBody');
+                        
+                        if (usersResponse.ok && data.length > 0) {
+                            let tableHTML = '';
+                            data.forEach(user => {
+                                tableHTML += `
+                                    <tr class="transaction-item py-3">
+                                        <td class="px-6 py-4 text-gray-600">${user.name || 'N/A'}</td>
+                                        <td class="px-6 py-4 text-gray-600">${user.username || 'N/A'}</td>
+                                        <td class="px-6 py-4 text-gray-600">${user.phone_number || 'N/A'}</td>
+                                        <td class="px-6 py-4 text-gray-600">₹${user.balance}</td>
+                                        <td class="px-6 py-4 text-gray-600">₹${user.total_invested}</td>
+                                        <td class="px-6 py-4 text-gray-600">
+                                            <span class="px-2 py-1 text-xs rounded-full ${
+                                                user.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                                            }">
+                                                ${user.is_active ? 'Active' : 'Inactive'}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                `;
+                            });
+                            tableBody.innerHTML = tableHTML;
+                        } else {
+                            tableBody.innerHTML = `
+                                <tr>
+                                    <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                        No users found
+                                    </td>
+                                </tr>
+                            `;
+                        }
+                        break;
+                        
+                    case 'transactions':
+                        const transactionsResponse = await fetch('/api/admin/transactions', {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        data = await transactionsResponse.json();
+                        tableBody = document.getElementById('transactionsTableBody');
+                        
+                        if (transactionsResponse.ok && data.length > 0) {
+                            let tableHTML = '';
+                            data.forEach(transaction => {
+                                tableHTML += `
+                                    <tr class="transaction-item py-3">
+                                        <td class="px-6 py-4 text-gray-600">${transaction.user_id || 'N/A'}</td>
+                                        <td class="px-6 py-4 text-gray-600">${transaction.type || 'N/A'}</td>
+                                        <td class="px-6 py-4 text-gray-600">₹${transaction.amount}</td>
+                                        <td class="px-6 py-4 text-gray-600">
+                                            <span class="px-2 py-1 text-xs rounded-full ${
+                                                transaction.status === 'completed' 
+                                                    ? 'bg-green-100 text-green-800' 
+                                                    : transaction.status === 'pending'
+                                                    ? 'bg-yellow-100 text-yellow-800'
+                                                    : 'bg-red-100 text-red-800'
+                                            }">
+                                                ${transaction.status}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 text-gray-600">${transaction.description || 'N/A'}</td>
+                                        <td class="px-6 py-4 text-gray-600">${new Date(transaction.created_at).toLocaleString()}</td>
+                                    </tr>
+                                `;
+                            });
+                            tableBody.innerHTML = tableHTML;
+                        } else {
+                            tableBody.innerHTML = `
+                                <tr>
+                                    <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                        No transactions found
+                                    </td>
+                                </tr>
+                            `;
+                        }
+                        break;
+                        
+                    case 'withdrawals':
+                        const withdrawalsResponse = await fetch('/api/admin/withdrawals', {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        data = await withdrawalsResponse.json();
+                        tableBody = document.getElementById('withdrawalsTableBody');
+                        
+                        if (withdrawalsResponse.ok && data.length > 0) {
+                            let tableHTML = '';
+                            data.forEach(withdrawal => {
+                                tableHTML += `
+                                    <tr class="transaction-item py-3">
+                                        <td class="px-6 py-4 text-gray-600">${withdrawal.user_id || 'N/A'}</td>
+                                        <td class="px-6 py-4 text-gray-600">₹${withdrawal.amount}</td>
+                                        <td class="px-6 py-4 text-gray-600">${withdrawal.method || 'N/A'}</td>
+                                        <td class="px-6 py-4 text-gray-600">
+                                            <span class="px-2 py-1 text-xs rounded-full ${
+                                                withdrawal.status === 'approved' 
+                                                    ? 'bg-green-100 text-green-800' 
+                                                    : withdrawal.status === 'pending'
+                                                    ? 'bg-yellow-100 text-yellow-800'
+                                                    : 'bg-red-100 text-red-800'
+                                            }">
+                                                ${withdrawal.status}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 text-gray-600">${new Date(withdrawal.created_at).toLocaleString()}</td>
+                                    </tr>
+                                `;
+                            });
+                            tableBody.innerHTML = tableHTML;
+                        } else {
+                            tableBody.innerHTML = `
+                                <tr>
+                                    <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                                        No withdrawals found
+                                    </td>
+                                </tr>
+                            `;
+                        }
+                        break;
+                        
+                    case 'recharges':
+                        const rechargesResponse = await fetch('/api/admin/recharges', {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        data = await rechargesResponse.json();
+                        tableBody = document.getElementById('rechargesTableBody');
+                        
+                        if (rechargesResponse.ok && data.length > 0) {
+                            let tableHTML = '';
+                            data.forEach(recharge => {
+                                tableHTML += `
+                                    <tr class="transaction-item py-3">
+                                        <td class="px-6 py-4 text-gray-600">${recharge.user_id || 'N/A'}</td>
+                                        <td class="px-6 py-4 text-gray-600">₹${recharge.amount}</td>
+                                        <td class="px-6 py-4 text-gray-600">
+                                            <span class="px-2 py-1 text-xs rounded-full ${
+                                                recharge.status === 'completed' 
+                                                    ? 'bg-green-100 text-green-800' 
+                                                    : recharge.status === 'pending'
+                                                    ? 'bg-yellow-100 text-yellow-800'
+                                                    : 'bg-red-100 text-red-800'
+                                            }">
+                                                ${recharge.status}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 text-gray-600">${new Date(recharge.created_at).toLocaleString()}</td>
+                                    </tr>
+                                `;
+                            });
+                            tableBody.innerHTML = tableHTML;
+                        } else {
+                            tableBody.innerHTML = `
+                                <tr>
+                                    <td colspan="4" class="px-6 py-4 text-center text-gray-500">
+                                        No recharges found
+                                    </td>
+                                </tr>
+                            `;
+                        }
+                        break;
+                        
+                    case 'products':
+                        const productsResponse = await fetch('/api/admin/products', {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        data = await productsResponse.json();
+                        tableBody = document.getElementById('productsTableBody');
+                        
+                        if (productsResponse.ok && data.length > 0) {
+                            let tableHTML = '';
+                            data.forEach(product => {
+                                tableHTML += `
+                                    <tr class="transaction-item py-3">
+                                        <td class="px-6 py-4 text-gray-600">${product.name || 'N/A'}</td>
+                                        <td class="px-6 py-4 text-gray-600">₹${product.price}</td>
+                                        <td class="px-6 py-4 text-gray-600">₹${product.daily_income}</td>
+                                        <td class="px-6 py-4 text-gray-600">${product.duration} days</td>
+                                        <td class="px-6 py-4 text-gray-600">₹${product.profit}</td>
+                                    </tr>
+                                `;
+                            });
+                            tableBody.innerHTML = tableHTML;
+                        } else {
+                            tableBody.innerHTML = `
+                                <tr>
+                                    <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                                        No products found
+                                    </td>
+                                </tr>
+                            `;
+                        }
+                        break;
+                        
+                    case 'referrals':
+                        const referralsResponse = await fetch('/api/admin/referrals', {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        data = await referralsResponse.json();
+                        tableBody = document.getElementById('referralsTableBody');
+                        
+                        if (referralsResponse.ok && data.length > 0) {
+                            let tableHTML = '';
+                            data.forEach(referral => {
+                                tableHTML += `
+                                    <tr class="transaction-item py-3">
+                                        <td class="px-6 py-4 text-gray-600">${referral.user_name || 'N/A'}</td>
+                                        <td class="px-6 py-4 text-gray-600">${referral.user_username || 'N/A'}</td>
+                                        <td class="px-6 py-4 text-gray-600">${referral.referrer_id || 'N/A'}</td>
+                                        <td class="px-6 py-4 text-gray-600">${new Date(referral.referral_date).toLocaleDateString()}</td>
+                                    </tr>
+                                `;
+                            });
+                            tableBody.innerHTML = tableHTML;
+                        } else {
+                            tableBody.innerHTML = `
+                                <tr>
+                                    <td colspan="4" class="px-6 py-4 text-center text-gray-500">
+                                        No referrals found
+                                    </td>
+                                </tr>
+                            `;
+                        }
+                        break;
+                        
+                    case 'dashboard':
+                        // Just reload the dashboard stats
+                        loadAdminStats();
+                        document.getElementById('activityTableBody').innerHTML = `
+                            <tr>
+                                <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                                    Navigate to different sections using the sidebar
+                                </td>
+                            </tr>
+                        `;
+                        break;
+                        
+                    case 'settings':
+                        // Settings don't need API data, just show the form
+                        break;
+                }
+            } catch (error) {
+                console.error('Error loading section:', error);
+                
+                // Show error in the appropriate table
+                const tableBody = document.getElementById(`${section}TableBody`);
+                if (tableBody) {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="${section === 'users' ? 6 : section === 'transactions' ? 6 : section === 'withdrawals' ? 5 : section === 'recharges' ? 4 : section === 'products' ? 5 : 4}" 
+                                class="px-6 py-4 text-center text-red-500">
+                                Error loading data: ${error.message}
+                            </td>
+                        </tr>
+                    `;
+                }
+            }
+        }
+
+        // Add balance form submission
+        document.getElementById('addBalanceForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const token = getToken();
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const userId = document.getElementById('userId').value;
+            const amount = document.getElementById('amount').value;
+            const reason = document.getElementById('reason').value;
+            
+            try {
+                const response = await fetch(`/api/admin/user/${userId}/balance`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ amount, reason })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert(`Balance of ₹${amount} added to user successfully!`);
+                    document.getElementById('addBalanceForm').reset();
+                    // Optionally reload the users section if currently viewing it
+                    if (document.getElementById('section-users').classList.contains('active')) {
+                        loadSection('users');
+                    }
+                } else {
+                    alert(result.error || 'Failed to add balance');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while adding balance');
+            }
+        });
+
+        // Verify UTR form submission
+        document.getElementById('verifyUtrForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const token = getToken();
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const utr = document.getElementById('utr').value;
+            const selectedAction = document.querySelector('input[name="action"]:checked');
+            
+            if (!selectedAction) {
+                alert('Please select an action (Approve or Reject)');
+                return;
+            }
+            
+            const action = selectedAction.value;
+            
+            try {
+                const response = await fetch('/api/admin/verify-utr', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ utr, action })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert(result.message);
+                    document.getElementById('verifyUtrForm').reset();
+                    // Optionally reload the recharges section if currently viewing it
+                    if (document.getElementById('section-recharges').classList.contains('active')) {
+                        loadSection('recharges');
+                    }
+                } else {
+                    alert(result.error || 'Failed to process UTR verification');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while processing UTR');
+            }
+        });
+
+        // Update popup settings
+        document.getElementById('updatePopupBtn').addEventListener('click', () => {
+            const interval = document.getElementById('popupInterval').value;
+            const enabled = document.getElementById('popupToggle').checked;
+            
+            // In a real implementation, this would call the API to update settings
+            alert(`Popup settings updated:\nEnabled: ${enabled}\nInterval: ${interval} seconds`);
+        });
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        });
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAdmin();
+            
+            // Load dashboard stats by default
+            loadAdminStats();
+            
+            // Show dashboard section by default
+            showSection('dashboard');
+        });
+    </script>
+</body>
+</html>

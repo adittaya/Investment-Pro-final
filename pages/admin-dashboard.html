@@ -1,0 +1,1707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - InvestPro</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f3f4f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        .sidebar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .admin-card {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #48c78e 0%, #3a7d68 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #f14668 0%, #c13554 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .btn-warning {
+            background: linear-gradient(135deg, #ffd43b 0%, #fcc419 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .admin-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .active-nav {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-left: 4px solid white;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        }
+        .input-field:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+        .section-content {
+            display: none;
+        }
+        .section-content.active {
+            display: block;
+        }
+        .table-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .transaction-item {
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .status-pending { background-color: #fef3c7; color: #d97706; }
+        .status-approved { background-color: #dcfce7; color: #166534; }
+        .status-rejected { background-color: #fee2e2; color: #dc2626; }
+        .status-completed { background-color: #dcfce7; color: #166534; }
+        .status-active { background-color: #dcfce7; color: #166534; }
+        .status-inactive { background-color: #e5e7eb; color: #4b5563; }
+        .status-success { background-color: #dcfce7; color: #166534; }
+        .status-failed { background-color: #fee2e2; color: #dc2626; }
+        .status-waiting { background-color: #dbeafe; color: #2563eb; }
+        .user-edit-form {
+            display: none;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 50;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: none;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="flex">
+    <!-- Sidebar -->
+    <div class="sidebar w-64 text-white fixed h-full">
+        <div class="p-5">
+            <h1 class="text-2xl font-bold">Admin Panel</h1>
+        </div>
+        <nav class="mt-5">
+            <a href="#" data-section="dashboard" class="nav-link active-nav block py-3 px-5 text-white font-medium">
+                <i class="fas fa-tachometer-alt mr-3"></i>Dashboard
+            </a>
+            <a href="#" data-section="users" class="nav-link block py-3 px-5 text-white hover:bg-purple-700 font-medium">
+                <i class="fas fa-users mr-3"></i>Manage Users
+            </a>
+            <a href="#" data-section="transactions" class="nav-link block py-3 px-5 text-white hover:bg-purple-700 font-medium">
+                <i class="fas fa-exchange-alt mr-3"></i>Transactions
+            </a>
+            <a href="#" data-section="withdrawals" class="nav-link block py-3 px-5 text-white hover:bg-purple-700 font-medium">
+                <i class="fas fa-download mr-3"></i>Withdrawals
+            </a>
+            <a href="#" data-section="recharges" class="nav-link block py-3 px-5 text-white hover:bg-purple-700 font-medium">
+                <i class="fas fa-upload mr-3"></i>Recharges
+            </a>
+            <a href="#" data-section="products" class="nav-link block py-3 px-5 text-white hover:bg-purple-700 font-medium">
+                <i class="fas fa-box mr-3"></i>Products
+            </a>
+            <a href="#" data-section="referrals" class="nav-link block py-3 px-5 text-white hover:bg-purple-700 font-medium">
+                <i class="fas fa-user-friends mr-3"></i>Referrals
+            </a>
+            <a href="#" data-section="investment-rebate" class="nav-link block py-3 px-5 text-white hover:bg-purple-700 font-medium">
+                <i class="fas fa-coins mr-3"></i>Investment Rebate
+            </a>
+            <a href="#" data-section="settings" class="nav-link block py-3 px-5 text-white hover:bg-purple-700 font-medium">
+                <i class="fas fa-cog mr-3"></i>Settings
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-grow ml-64">
+        <!-- Admin Header -->
+        <div class="admin-header py-4 px-6 flex justify-between items-center">
+            <h2 class="text-xl font-bold">Admin Dashboard</h2>
+            <div class="flex items-center space-x-4">
+                <span>Welcome, Admin</span>
+                <button id="logoutBtn" class="bg-white text-purple-700 hover:bg-gray-100 px-4 py-2 rounded-lg">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div class="p-6">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="stat-card admin-card p-6">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-gray-600">Total Users</p>
+                            <p class="text-3xl font-bold mt-1" id="totalUsers">0</p>
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded-full">
+                            <i class="fas fa-users text-blue-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card admin-card p-6">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-gray-600">Active Products</p>
+                            <p class="text-3xl font-bold mt-1" id="activeProducts">0</p>
+                        </div>
+                        <div class="bg-green-100 p-3 rounded-full">
+                            <i class="fas fa-chart-line text-green-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card admin-card p-6">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-gray-600">Total Recharges</p>
+                            <p class="text-3xl font-bold mt-1" id="totalRecharges">₹0.00</p>
+                        </div>
+                        <div class="bg-purple-100 p-3 rounded-full">
+                            <i class="fas fa-rupee-sign text-purple-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card admin-card p-6">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-gray-600">Pending Withdrawals</p>
+                            <p class="text-3xl font-bold mt-1" id="pendingWithdrawals">0</p>
+                        </div>
+                        <div class="bg-yellow-100 p-3 rounded-full">
+                            <i class="fas fa-download text-yellow-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                <!-- Add Balance -->
+                <div class="stat-card admin-card p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Add Balance to User</h3>
+                    <form id="addBalanceForm">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="userId">
+                                User ID
+                            </label>
+                            <input type="text" id="userId" name="user_id" required
+                                class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="amount">
+                                Amount
+                            </label>
+                            <input type="number" id="amount" name="amount" required
+                                class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="reason">
+                                Reason
+                            </label>
+                            <input type="text" id="reason" name="reason" required
+                                class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <button type="submit" class="btn-primary w-full py-3 px-4 text-white font-bold rounded-lg">
+                            Add Balance
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Verify UTR -->
+                <div class="stat-card admin-card p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Verify Recharge UTR</h3>
+                    <form id="verifyUtrForm">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="utr">
+                                UTR Number
+                            </label>
+                            <input type="text" id="utr" name="utr" required
+                                class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <button type="submit" name="action" value="approve" class="btn-success w-full py-2 px-4 text-white font-bold rounded-lg">
+                                    Approve
+                                </button>
+                            </div>
+                            <div>
+                                <button type="submit" name="action" value="reject" class="btn-danger w-full py-2 px-4 text-white font-bold rounded-lg">
+                                    Reject
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Control Popup -->
+                <div class="stat-card admin-card p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Popup Controls</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Popup Status</label>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="popupToggle" class="mr-2 h-5 w-5 text-blue-600 rounded">
+                                <label for="popupToggle" class="text-gray-700">Enable fake withdrawals popup</label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="popupInterval">
+                                Popup Interval (seconds)
+                            </label>
+                            <input type="number" id="popupInterval" value="10" min="5" max="60"
+                                class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <button id="updatePopupBtn" class="btn-primary w-full py-3 px-4 text-white font-bold rounded-lg">
+                            Update Settings
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- All Sections - Only one will be visible at a time -->
+            <!-- Dashboard Section -->
+            <div id="section-dashboard" class="section-content active">
+                <div class="stat-card admin-card p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Recent Activity</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="activityTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Activity data will be loaded here -->
+                                <tr>
+                                    <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                                        Navigate to different sections using the sidebar
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Section -->
+            <div id="section-users" class="section-content">
+                <div class="stat-card admin-card p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Manage Users</h3>
+                    <div class="table-container">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Balance</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Invested</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Users data will be loaded here -->
+                                <tr>
+                                    <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+                                        Loading users...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- User Edit Form -->
+                    <div id="userEditForm" class="user-edit-form mt-6 p-4 bg-gray-50 rounded-lg">
+                        <h4 class="font-medium text-gray-800 mb-4">Edit User Details</h4>
+                        <form id="editUserForm">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="editUserId">User ID</label>
+                                    <input type="text" id="editUserId" readonly class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="editUsername">Username</label>
+                                    <input type="text" id="editUsername" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="editPhone">Phone Number</label>
+                                    <input type="text" id="editPhone" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="editName">Name</label>
+                                    <input type="text" id="editName" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="editBalance">Balance</label>
+                                    <input type="number" id="editBalance" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="editTotalInvested">Total Invested</label>
+                                    <input type="number" id="editTotalInvested" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="editTotalWithdrawn">Total Withdrawn</label>
+                                    <input type="number" id="editTotalWithdrawn" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="editReferralCode">Referral Code</label>
+                                    <input type="text" id="editReferralCode" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Account Status</label>
+                                    <div class="flex space-x-4">
+                                        <label class="flex items-center">
+                                            <input type="radio" name="editStatus" value="true" id="editActive" class="mr-2">
+                                            <span>Active</span>
+                                        </label>
+                                        <label class="flex items-center">
+                                            <input type="radio" name="editStatus" value="false" id="editInactive" class="mr-2">
+                                            <span>Inactive</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Admin Status</label>
+                                    <div class="flex space-x-4">
+                                        <label class="flex items-center">
+                                            <input type="radio" name="editAdmin" value="true" id="editAdminYes" class="mr-2">
+                                            <span>Admin</span>
+                                        </label>
+                                        <label class="flex items-center">
+                                            <input type="radio" name="editAdmin" value="false" id="editAdminNo" class="mr-2">
+                                            <span>User</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="editPassword">New Password (Leave blank to keep current)</label>
+                                    <input type="password" id="editPassword" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                            </div>
+                            <div class="flex justify-end space-x-2">
+                                <button type="button" id="cancelEditUserBtn" class="btn-danger py-2 px-4 text-white font-bold rounded-lg">
+                                    Cancel
+                                </button>
+                                <button type="submit" class="btn-primary py-2 px-4 text-white font-bold rounded-lg">
+                                    Update User
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transactions Section -->
+            <div id="section-transactions" class="section-content">
+                <div class="stat-card admin-card p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">All Transactions</h3>
+                    <div class="table-container">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User ID</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactionsTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Transactions data will be loaded here -->
+                                <tr>
+                                    <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                        Loading transactions...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Withdrawals Section -->
+            <div id="section-withdrawals" class="section-content">
+                <div class="stat-card admin-card p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Withdrawal Requests</h3>
+                    <div class="table-container">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User ID</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Method</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="withdrawalsTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Withdrawals data will be loaded here -->
+                                <tr>
+                                    <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                        Loading withdrawals...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recharges Section -->
+            <div id="section-recharges" class="section-content">
+                <div class="stat-card admin-card p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Recharge Requests</h3>
+                    <div class="table-container">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User ID</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">UTR Number</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rechargesTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Recharges data will be loaded here -->
+                                <tr>
+                                    <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                        Loading recharges...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Section -->
+            <div id="section-products" class="section-content">
+                <div class="stat-card admin-card p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Investment Products</h3>
+                    <div class="mb-4">
+                        <button id="addProductBtn" class="btn-primary py-2 px-4 text-white font-bold rounded-lg">
+                            Add New Product
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Daily Income</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Profit</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Products data will be loaded here -->
+                                <tr>
+                                    <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                        Loading products...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Add/Edit Product Form -->
+                    <div id="productForm" class="mt-6 p-4 bg-gray-50 rounded-lg hidden">
+                        <h4 class="font-medium text-gray-800 mb-4">Add/Edit Product</h4>
+                        <form id="productManagementForm">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="productId">Product ID (for editing)</label>
+                                    <input type="text" id="productId" placeholder="Leave blank for new product" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="productName">Product Name</label>
+                                    <input type="text" id="productName" required class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="productPrice">Price</label>
+                                    <input type="number" id="productPrice" required class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="productDailyIncome">Daily Income</label>
+                                    <input type="number" id="productDailyIncome" required class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="productDuration">Duration (days)</label>
+                                    <input type="number" id="productDuration" required class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="productProfit">Profit</label>
+                                    <input type="number" id="productProfit" required class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                            </div>
+                            <div class="flex justify-end space-x-2">
+                                <button type="button" id="cancelProductBtn" class="btn-danger py-2 px-4 text-white font-bold rounded-lg">
+                                    Cancel
+                                </button>
+                                <button type="submit" id="saveProductBtn" class="btn-primary py-2 px-4 text-white font-bold rounded-lg">
+                                    Save Product
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Referrals Section -->
+            <div id="section-referrals" class="section-content">
+                <div class="stat-card admin-card p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Referral Tracking</h3>
+                    <div class="table-container">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User Name</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Referrer ID</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Referral Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="referralsTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Referrals data will be loaded here -->
+                                <tr>
+                                    <td colspan="4" class="px-6 py-4 text-center text-gray-500">
+                                        Loading referrals...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Investment Rebate Section -->
+            <div id="section-investment-rebate" class="section-content">
+                <div class="stat-card admin-card p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Investment Rebate</h3>
+                    <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg mb-6">
+                        <p class="text-yellow-700">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                            <strong>Warning:</strong> This action will reduce the remaining duration of all active investments by one day and add the daily profit to the users' accounts.
+                            This will affect all active investment products globally.
+                        </p>
+                    </div>
+                    <div class="flex justify-center">
+                        <button id="rebateTriggerBtn" class="btn-warning py-4 px-8 text-white font-bold rounded-lg text-lg">
+                            <i class="fas fa-coins mr-2"></i>Apply Investment Rebate to All Users
+                        </button>
+                    </div>
+                    <div class="mt-6">
+                        <h4 class="font-medium text-gray-800 mb-2">Rebate History</h4>
+                        <div class="table-container">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Users Affected</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Amount Added</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Admin</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="rebateHistoryTable" class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td colspan="4" class="px-6 py-4 text-center text-gray-500">
+                                            No rebate history yet
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div id="section-settings" class="section-content">
+                <div class="stat-card admin-card p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Admin Settings</h3>
+                    <div class="space-y-6">
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <h4 class="font-medium text-gray-800 mb-2">Platform Settings</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Minimum Withdrawal Amount</label>
+                                    <input type="number" value="100" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Maximum Daily Withdrawal</label>
+                                    <input type="number" value="10000" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <h4 class="font-medium text-gray-800 mb-2">Security Settings</h4>
+                            <div class="flex items-center mb-2">
+                                <input type="checkbox" id="2fa" class="mr-2 h-5 w-5 text-blue-600 rounded">
+                                <label for="2fa" class="text-gray-700">Enable 2FA for admin accounts</label>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <input type="checkbox" id="login-alerts" class="mr-2 h-5 w-5 text-blue-600 rounded">
+                                <label for="login-alerts" class="text-gray-700">Send alerts for admin logins</label>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <h4 class="font-medium text-gray-800 mb-2">Maintenance Mode</h4>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="maintenance" class="mr-2 h-5 w-5 text-blue-600 rounded">
+                                <label for="maintenance" class="text-gray-700">Enable maintenance mode (users will see maintenance page)</label>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-end">
+                            <button class="btn-primary py-2 px-6 text-white font-bold rounded-lg">
+                                Save Settings
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div id="editUserModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 class="text-xl font-bold mb-4">Edit User Account</h2>
+            <form id="modalEditUserForm">
+                <input type="hidden" id="modalUserId">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="modalUsername">Username</label>
+                        <input type="text" id="modalUsername" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="modalPhone">Phone Number</label>
+                        <input type="text" id="modalPhone" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="modalName">Name</label>
+                        <input type="text" id="modalName" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="modalBalance">Balance</label>
+                        <input type="number" id="modalBalance" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="modalTotalInvested">Total Invested</label>
+                        <input type="number" id="modalTotalInvested" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="modalTotalWithdrawn">Total Withdrawn</label>
+                        <input type="number" id="modalTotalWithdrawn" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="modalReferralCode">Referral Code</label>
+                        <input type="text" id="modalReferralCode" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="modalReferredBy">Referred By</label>
+                        <input type="text" id="modalReferredBy" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Account Status</label>
+                        <div class="flex space-x-4">
+                            <label class="flex items-center">
+                                <input type="radio" name="modalStatus" value="true" id="modalActive" class="mr-2">
+                                <span>Active</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="modalStatus" value="false" id="modalInactive" class="mr-2">
+                                <span>Inactive</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Admin Status</label>
+                        <div class="flex space-x-4">
+                            <label class="flex items-center">
+                                <input type="radio" name="modalAdmin" value="true" id="modalAdminYes" class="mr-2">
+                                <span>Admin</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="modalAdmin" value="false" id="modalAdminNo" class="mr-2">
+                                <span>User</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="modalPassword">New Password (Leave blank to keep current)</label>
+                        <input type="password" id="modalPassword" class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg">
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" id="cancelModalEditBtn" class="btn-danger py-2 px-4 text-white font-bold rounded-lg">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn-primary py-2 px-4 text-white font-bold rounded-lg">
+                        Update User
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Function to get token from localStorage
+        function getToken() {
+            return localStorage.getItem('token');
+        }
+
+        // Function to check if user is admin
+        function checkAdmin() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!user || !user.is_admin) {
+                alert('Admin access required');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Function to switch between sections
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section-content').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show the requested section
+            const sectionToShow = document.getElementById(`section-${sectionId}`);
+            if (sectionToShow) {
+                sectionToShow.classList.add('active');
+            }
+            
+            // Update active nav link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active-nav');
+            });
+            
+            const activeLink = document.querySelector(`[data-section="${sectionId}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active-nav');
+            }
+        }
+
+        // Navigation functionality
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const section = this.getAttribute('data-section');
+                if (section) {
+                    showSection(section);
+                    loadSection(section);
+                }
+            });
+        });
+
+        // Load admin stats from API
+        async function loadAdminStats() {
+            const token = getToken();
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/admin/dashboard-stats', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const stats = await response.json();
+                    document.getElementById('totalUsers').textContent = stats.totalUsers;
+                    document.getElementById('activeProducts').textContent = stats.activeProducts;
+                    document.getElementById('totalRecharges').textContent = `₹${parseFloat(stats.totalRecharges).toLocaleString('en-IN')}`;
+                    document.getElementById('pendingWithdrawals').textContent = stats.pendingWithdrawals;
+                } else {
+                    console.error('Failed to load stats:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error loading admin stats:', error);
+            }
+        }
+
+        // Function to format currency
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                minimumFractionDigits: 2
+            }).format(amount);
+        }
+
+        // Load specific section data
+        async function loadSection(section) {
+            const token = getToken();
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                let data;
+                let tableBody;
+                
+                switch(section) {
+                    case 'users':
+                        const usersResponse = await fetch('/api/admin/users', {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        data = await usersResponse.json();
+                        tableBody = document.getElementById('usersTableBody');
+                        
+                        if (usersResponse.ok && data.length > 0) {
+                            let tableHTML = '';
+                            data.forEach(user => {
+                                tableHTML += `
+                                    <tr class="transaction-item py-3">
+                                        <td class="px-6 py-4 text-gray-600">${user.name || 'N/A'}</td>
+                                        <td class="px-6 py-4 text-gray-600">${user.username || 'N/A'}</td>
+                                        <td class="px-6 py-4 text-gray-600">${user.phone_number || 'N/A'}</td>
+                                        <td class="px-6 py-4 text-gray-600">${formatCurrency(user.balance)}</td>
+                                        <td class="px-6 py-4 text-gray-600">${formatCurrency(user.total_invested)}</td>
+                                        <td class="px-6 py-4 text-gray-600">
+                                            <span class="status-badge ${user.is_active ? 'status-active' : 'status-inactive'}">
+                                                ${user.is_active ? 'Active' : 'Inactive'}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 text-gray-600">
+                                            <button onclick="openEditUserModal('${user.id}', '${user.username}', '${user.phone_number}', '${user.name}', ${user.balance}, ${user.total_invested}, ${user.total_withdrawn}, '${user.referral_code}', '${user.referred_by || ''}', ${user.is_active}, ${user.is_admin})"
+                                                class="btn-primary py-1 px-3 text-white text-sm rounded">
+                                                Edit
+                                            </button>
+                                        </td>
+                                    </tr>
+                                `;
+                            });
+                            tableBody.innerHTML = tableHTML;
+                        } else {
+                            tableBody.innerHTML = `
+                                <tr>
+                                    <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+                                        No users found
+                                    </td>
+                                </tr>
+                            `;
+                        }
+                        break;
+                        
+                    case 'transactions':
+                        const transactionsResponse = await fetch('/api/admin/transactions', {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        data = await transactionsResponse.json();
+                        tableBody = document.getElementById('transactionsTableBody');
+                        
+                        if (transactionsResponse.ok && data.length > 0) {
+                            let tableHTML = '';
+                            data.forEach(transaction => {
+                                tableHTML += `
+                                    <tr class="transaction-item py-3">
+                                        <td class="px-6 py-4 text-gray-600">${transaction.user_id || 'N/A'}</td>
+                                        <td class="px-6 py-4 text-gray-600">${transaction.type || 'N/A'}</td>
+                                        <td class="px-6 py-4 text-gray-600">${formatCurrency(transaction.amount)}</td>
+                                        <td class="px-6 py-4 text-gray-600">
+                                            <span class="status-badge ${
+                                                transaction.status === 'completed' 
+                                                    ? 'status-completed' 
+                                                    : transaction.status === 'pending'
+                                                    ? 'status-pending'
+                                                    : 'status-failed'
+                                            }">
+                                                ${transaction.status}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 text-gray-600">${transaction.description || 'N/A'}</td>
+                                        <td class="px-6 py-4 text-gray-600">${new Date(transaction.created_at).toLocaleString()}</td>
+                                    </tr>
+                                `;
+                            });
+                            tableBody.innerHTML = tableHTML;
+                        } else {
+                            tableBody.innerHTML = `
+                                <tr>
+                                    <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                        No transactions found
+                                    </td>
+                                </tr>
+                            `;
+                        }
+                        break;
+                        
+                    case 'withdrawals':
+                        const withdrawalsResponse = await fetch('/api/admin/withdrawals', {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        data = await withdrawalsResponse.json();
+                        tableBody = document.getElementById('withdrawalsTableBody');
+                        
+                        if (withdrawalsResponse.ok && data.length > 0) {
+                            let tableHTML = '';
+                            data.forEach(withdrawal => {
+                                tableHTML += `
+                                    <tr class="transaction-item py-3">
+                                        <td class="px-6 py-4 text-gray-600">${withdrawal.user_id || 'N/A'}</td>
+                                        <td class="px-6 py-4 text-gray-600">${formatCurrency(withdrawal.amount)}</td>
+                                        <td class="px-6 py-4 text-gray-600">${withdrawal.method || 'N/A'}</td>
+                                        <td class="px-6 py-4 text-gray-600">
+                                            <span class="status-badge ${
+                                                withdrawal.status === 'approved' 
+                                                    ? 'status-approved' 
+                                                    : withdrawal.status === 'pending'
+                                                    ? 'status-pending'
+                                                    : 'status-rejected'
+                                            }">
+                                                ${withdrawal.status}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 text-gray-600">${new Date(withdrawal.created_at).toLocaleString()}</td>
+                                        <td class="px-6 py-4 text-gray-600">
+                                            ${withdrawal.status === 'pending' ? 
+                                                `<button onclick="approveWithdrawal('${withdrawal.id}', 'approved')" class="btn-success py-1 px-2 text-white text-sm rounded mr-2">Approve</button>
+                                                 <button onclick="approveWithdrawal('${withdrawal.id}', 'rejected')" class="btn-danger py-1 px-2 text-white text-sm rounded">Reject</button>` 
+                                                : 'Action completed'}
+                                        </td>
+                                    </tr>
+                                `;
+                            });
+                            tableBody.innerHTML = tableHTML;
+                        } else {
+                            tableBody.innerHTML = `
+                                <tr>
+                                    <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                        No withdrawals found
+                                    </td>
+                                </tr>
+                            `;
+                        }
+                        break;
+                        
+                    case 'recharges':
+                        const rechargesResponse = await fetch('/api/admin/recharges', {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        data = await rechargesResponse.json();
+                        tableBody = document.getElementById('rechargesTableBody');
+                        
+                        if (rechargesResponse.ok && data.length > 0) {
+                            let tableHTML = '';
+                            data.forEach(recharge => {
+                                tableHTML += `
+                                    <tr class="transaction-item py-3">
+                                        <td class="px-6 py-4 text-gray-600">${recharge.user_id || 'N/A'}</td>
+                                        <td class="px-6 py-4 text-gray-600">${formatCurrency(recharge.amount)}</td>
+                                        <td class="px-6 py-4 text-gray-600">${recharge.utr_number || 'N/A'}</td>
+                                        <td class="px-6 py-4 text-gray-600">
+                                            <span class="status-badge ${
+                                                recharge.status === 'completed' 
+                                                    ? 'status-success' 
+                                                    : recharge.status === 'pending'
+                                                    ? 'status-waiting'
+                                                    : 'status-failed'
+                                            }">
+                                                ${recharge.status}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 text-gray-600">${new Date(recharge.created_at).toLocaleString()}</td>
+                                        <td class="px-6 py-4 text-gray-600">
+                                            ${recharge.status === 'pending' ? 
+                                                `<button onclick="approveRecharge('${recharge.id}', 'completed')" class="btn-success py-1 px-2 text-white text-sm rounded mr-2">Approve</button>
+                                                 <button onclick="approveRecharge('${recharge.id}', 'failed')" class="btn-danger py-1 px-2 text-white text-sm rounded">Reject</button>` 
+                                                : 'Action completed'}
+                                        </td>
+                                    </tr>
+                                `;
+                            });
+                            tableBody.innerHTML = tableHTML;
+                        } else {
+                            tableBody.innerHTML = `
+                                <tr>
+                                    <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                        No recharges found
+                                    </td>
+                                </tr>
+                            `;
+                        }
+                        break;
+                        
+                    case 'products':
+                        const productsResponse = await fetch('/api/admin/products', {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        data = await productsResponse.json();
+                        tableBody = document.getElementById('productsTableBody');
+                        
+                        if (productsResponse.ok && data.length > 0) {
+                            let tableHTML = '';
+                            data.forEach(product => {
+                                tableHTML += `
+                                    <tr class="transaction-item py-3">
+                                        <td class="px-6 py-4 text-gray-600">${product.name || 'N/A'}</td>
+                                        <td class="px-6 py-4 text-gray-600">${formatCurrency(product.price)}</td>
+                                        <td class="px-6 py-4 text-gray-600">${formatCurrency(product.daily_income)}</td>
+                                        <td class="px-6 py-4 text-gray-600">${product.duration} days</td>
+                                        <td class="px-6 py-4 text-gray-600">${formatCurrency(product.profit)}</td>
+                                        <td class="px-6 py-4 text-gray-600">
+                                            <button onclick="editProduct(${product.id}, '${product.name}', ${product.price}, ${product.daily_income}, ${product.duration}, ${product.profit})"
+                                                class="btn-primary py-1 px-3 text-white text-sm rounded mr-2">Edit</button>
+                                            <button onclick="deleteProduct(${product.id})"
+                                                class="btn-danger py-1 px-3 text-white text-sm rounded">Delete</button>
+                                        </td>
+                                    </tr>
+                                `;
+                            });
+                            tableBody.innerHTML = tableHTML;
+                        } else {
+                            tableBody.innerHTML = `
+                                <tr>
+                                    <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                        No products found
+                                    </td>
+                                </tr>
+                            `;
+                        }
+                        break;
+                        
+                    case 'referrals':
+                        const referralsResponse = await fetch('/api/admin/referrals', {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        data = await referralsResponse.json();
+                        tableBody = document.getElementById('referralsTableBody');
+                        
+                        if (referralsResponse.ok && data.length > 0) {
+                            let tableHTML = '';
+                            data.forEach(referral => {
+                                tableHTML += `
+                                    <tr class="transaction-item py-3">
+                                        <td class="px-6 py-4 text-gray-600">${referral.user_name || 'N/A'}</td>
+                                        <td class="px-6 py-4 text-gray-600">${referral.user_username || 'N/A'}</td>
+                                        <td class="px-6 py-4 text-gray-600">${referral.referrer_id || 'N/A'}</td>
+                                        <td class="px-6 py-4 text-gray-600">${new Date(referral.referral_date).toLocaleDateString()}</td>
+                                    </tr>
+                                `;
+                            });
+                            tableBody.innerHTML = tableHTML;
+                        } else {
+                            tableBody.innerHTML = `
+                                <tr>
+                                    <td colspan="4" class="px-6 py-4 text-center text-gray-500">
+                                        No referrals found
+                                    </td>
+                                </tr>
+                            `;
+                        }
+                        break;
+                        
+                    case 'investment-rebate':
+                        // For investment rebate section, we just show the controls
+                        // The rebate functionality will be triggered by the button
+                        break;
+                        
+                    case 'dashboard':
+                        // Just reload the dashboard stats
+                        loadAdminStats();
+                        document.getElementById('activityTableBody').innerHTML = `
+                            <tr>
+                                <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                                    Navigate to different sections using the sidebar
+                                </td>
+                            </tr>
+                        `;
+                        break;
+                        
+                    case 'settings':
+                        // Settings don't need API data, just show the form
+                        break;
+                }
+            } catch (error) {
+                console.error('Error loading section:', error);
+                
+                // Show error in the appropriate table
+                const tableBody = document.getElementById(`${section}TableBody`);
+                if (tableBody) {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="${section === 'users' ? 7 : section === 'transactions' ? 6 : section === 'withdrawals' ? 6 : section === 'recharges' ? 6 : section === 'products' ? 6 : 4}" 
+                                class="px-6 py-4 text-center text-red-500">
+                                Error loading data: ${error.message}
+                            </td>
+                        </tr>
+                    `;
+                }
+            }
+        }
+
+        // Function to approve/reject withdrawals
+        async function approveWithdrawal(withdrawalId, status) {
+            const token = getToken();
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                // Update the withdrawal status
+                const response = await fetch(`/api/admin/withdrawal/${withdrawalId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        status: status
+                    })
+                });
+
+                if (response.ok) {
+                    alert(`Withdrawal ${status} successfully`);
+                    // Reload the withdrawals section to show the updated status
+                    loadSection('withdrawals');
+                } else {
+                    const result = await response.json();
+                    alert(result.error || 'Failed to update withdrawal status');
+                }
+            } catch (error) {
+                console.error('Error updating withdrawal:', error);
+                alert('Failed to update withdrawal status');
+            }
+        }
+
+        // Function to approve/reject recharges
+        async function approveRecharge(rechargeId, status) {
+            const token = getToken();
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Find the recharge to get its UTR number
+            let utrNumber = rechargeId;
+            
+            try {
+                const response = await fetch('/api/admin/verify-utr', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        utr: utrNumber,
+                        action: status === 'completed' ? 'approve' : 'reject'
+                    })
+                });
+
+                if (response.ok) {
+                    alert(`Recharge ${status} successfully`);
+                    // Reload the recharges section to show the updated status
+                    loadSection('recharges');
+                } else {
+                    const result = await response.json();
+                    alert(result.error || 'Failed to update recharge status');
+                }
+            } catch (error) {
+                console.error('Error updating recharge:', error);
+                alert('Failed to update recharge status');
+            }
+        }
+
+        // Function to edit a product
+        function editProduct(id, name, price, daily_income, duration, profit) {
+            document.getElementById('productId').value = id;
+            document.getElementById('productName').value = name;
+            document.getElementById('productPrice').value = price;
+            document.getElementById('productDailyIncome').value = daily_income;
+            document.getElementById('productDuration').value = duration;
+            document.getElementById('productProfit').value = profit;
+            document.getElementById('productForm').classList.remove('hidden');
+            document.getElementById('saveProductBtn').textContent = 'Update Product';
+        }
+
+        // Function to delete a product
+        async function deleteProduct(id) {
+            if (!confirm('Are you sure you want to delete this product? This action cannot be undone.')) {
+                return;
+            }
+
+            const token = getToken();
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                // In a real implementation, you'd call a DELETE API endpoint
+                // For now, let's just reload the products section
+                alert('Product deletion functionality would be implemented here');
+                loadSection('products');
+            } catch (error) {
+                console.error('Error deleting product:', error);
+                alert('Failed to delete product');
+            }
+        }
+
+        // Open edit user modal
+        function openEditUserModal(id, username, phone, name, balance, totalInvested, totalWithdrawn, referralCode, referredBy, isActive, isAdmin) {
+            document.getElementById('modalUserId').value = id;
+            document.getElementById('modalUsername').value = username;
+            document.getElementById('modalPhone').value = phone;
+            document.getElementById('modalName').value = name;
+            document.getElementById('modalBalance').value = balance;
+            document.getElementById('modalTotalInvested').value = totalInvested;
+            document.getElementById('modalTotalWithdrawn').value = totalWithdrawn;
+            document.getElementById('modalReferralCode').value = referralCode;
+            document.getElementById('modalReferredBy').value = referredBy;
+            document.getElementById(isActive ? 'modalActive' : 'modalInactive').checked = true;
+            document.getElementById(isAdmin ? 'modalAdminYes' : 'modalAdminNo').checked = true;
+
+            document.getElementById('editUserModal').style.display = 'block';
+        }
+
+        // Close modal
+        function closeEditUserModal() {
+            document.getElementById('editUserModal').style.display = 'none';
+        }
+
+        // Add event listeners for modal close
+        document.querySelector('.close').addEventListener('click', closeEditUserModal);
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('editUserModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Add balance form submission
+        document.getElementById('addBalanceForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const token = getToken();
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const userId = document.getElementById('userId').value;
+            const amount = document.getElementById('amount').value;
+            const reason = document.getElementById('reason').value;
+            
+            try {
+                const response = await fetch(`/api/admin/user/${userId}/balance`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ amount, reason })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert(`Balance of ${formatCurrency(amount)} added to user successfully!`);
+                    document.getElementById('addBalanceForm').reset();
+                    // Optionally reload the users section if currently viewing it
+                    if (document.getElementById('section-users').classList.contains('active')) {
+                        loadSection('users');
+                    }
+                } else {
+                    alert(result.error || 'Failed to add balance');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while adding balance');
+            }
+        });
+
+        // Verify UTR form submission
+        document.getElementById('verifyUtrForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const token = getToken();
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const utr = document.getElementById('utr').value;
+            const selectedAction = document.querySelector('input[name="action"]:checked');
+            
+            if (!selectedAction) {
+                alert('Please select an action (Approve or Reject)');
+                return;
+            }
+            
+            const action = selectedAction.value;
+            
+            try {
+                const response = await fetch('/api/admin/verify-utr', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ utr, action })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert(result.message);
+                    document.getElementById('verifyUtrForm').reset();
+                    // Optionally reload the recharges section if currently viewing it
+                    if (document.getElementById('section-recharges').classList.contains('active')) {
+                        loadSection('recharges');
+                    }
+                } else {
+                    alert(result.error || 'Failed to process UTR verification');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while processing UTR');
+            }
+        });
+
+        // Handle modal edit user form submission
+        document.getElementById('modalEditUserForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const token = getToken();
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const userId = document.getElementById('modalUserId').value;
+            const username = document.getElementById('modalUsername').value;
+            const phone = document.getElementById('modalPhone').value;
+            const name = document.getElementById('modalName').value;
+            const balance = parseFloat(document.getElementById('modalBalance').value);
+            const totalInvested = parseFloat(document.getElementById('modalTotalInvested').value);
+            const totalWithdrawn = parseFloat(document.getElementById('modalTotalWithdrawn').value);
+            const referralCode = document.getElementById('modalReferralCode').value;
+            const referredBy = document.getElementById('modalReferredBy').value;
+            const isActive = document.querySelector('input[name="modalStatus"]:checked').value === 'true';
+            const isAdmin = document.querySelector('input[name="modalAdmin"]:checked').value === 'true';
+            const password = document.getElementById('modalPassword').value;
+
+            try {
+                const updateData = {
+                    username,
+                    phone_number: phone,
+                    name,
+                    balance,
+                    total_invested: totalInvested,
+                    total_withdrawn: totalWithdrawn,
+                    referral_code: referralCode,
+                    referred_by: referredBy,
+                    is_active: isActive,
+                    is_admin: isAdmin
+                };
+
+                // Only include password if it's provided
+                if (password.trim() !== '') {
+                    updateData.password = password;
+                }
+
+                const response = await fetch(`/api/admin/user/${userId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(updateData)
+                });
+
+                if (response.ok) {
+                    alert(`User ${userId} updated successfully!`);
+                    closeEditUserModal();
+                    
+                    // Reload the users section to reflect changes
+                    if (document.getElementById('section-users').classList.contains('active')) {
+                        loadSection('users');
+                    }
+                } else {
+                    const result = await response.json();
+                    alert(result.error || 'Failed to update user');
+                }
+            } catch (error) {
+                console.error('Error updating user:', error);
+                alert('Failed to update user');
+            }
+        });
+
+        // Cancel modal edit
+        document.getElementById('cancelModalEditBtn').addEventListener('click', closeEditUserModal);
+
+        // Investment rebate functionality
+        document.getElementById('rebateTriggerBtn').addEventListener('click', async () => {
+            if (!confirm('Are you sure you want to apply investment rebate to all users? This will reduce investment duration by one day and add daily profit to their accounts.')) {
+                return;
+            }
+
+            const token = getToken();
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/admin/process-investment-rebate', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    alert(`Investment rebate applied successfully!\nUsers affected: ${result.usersAffected}\nTotal amount added: ${formatCurrency(result.totalAmountAdded)}`);
+                } else {
+                    const result = await response.json();
+                    alert(result.error || 'Failed to apply investment rebate');
+                }
+            } catch (error) {
+                console.error('Error applying rebate:', error);
+                alert('Failed to apply investment rebate');
+            }
+        });
+
+        // Product management
+        document.getElementById('addProductBtn').addEventListener('click', () => {
+            // Reset form fields
+            document.getElementById('productId').value = '';
+            document.getElementById('productName').value = '';
+            document.getElementById('productPrice').value = '';
+            document.getElementById('productDailyIncome').value = '';
+            document.getElementById('productDuration').value = '';
+            document.getElementById('productProfit').value = '';
+            
+            document.getElementById('productForm').classList.remove('hidden');
+            document.getElementById('saveProductBtn').textContent = 'Save Product';
+        });
+
+        document.getElementById('cancelProductBtn').addEventListener('click', () => {
+            document.getElementById('productForm').classList.add('hidden');
+        });
+
+        document.getElementById('productManagementForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const token = getToken();
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const id = document.getElementById('productId').value;
+            const name = document.getElementById('productName').value;
+            const price = parseFloat(document.getElementById('productPrice').value);
+            const dailyIncome = parseFloat(document.getElementById('productDailyIncome').value);
+            const duration = parseInt(document.getElementById('productDuration').value);
+            const profit = parseFloat(document.getElementById('productProfit').value);
+
+            try {
+                if (id) {
+                    // Update existing product
+                    const response = await fetch(`/api/admin/products/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            name,
+                            price,
+                            daily_income: dailyIncome,
+                            duration,
+                            profit,
+                            total_return: dailyIncome * duration // Calculate total return
+                        })
+                    });
+
+                    if (response.ok) {
+                        alert(`Product ${name} updated successfully!`);
+                    } else {
+                        const result = await response.json();
+                        alert(result.error || 'Failed to update product');
+                        return;
+                    }
+                } else {
+                    // Create new product
+                    const response = await fetch('/api/admin/products', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            name,
+                            price,
+                            daily_income: dailyIncome,
+                            duration,
+                            total_return: dailyIncome * duration, // Calculate total return
+                            profit
+                        })
+                    });
+
+                    if (response.ok) {
+                        alert(`Product ${name} created successfully!`);
+                    } else {
+                        const result = await response.json();
+                        alert(result.error || 'Failed to create product');
+                        return;
+                    }
+                }
+                
+                document.getElementById('productForm').classList.add('hidden');
+                
+                // Reload the products section
+                if (document.getElementById('section-products').classList.contains('active')) {
+                    loadSection('products');
+                }
+            } catch (error) {
+                console.error('Error managing product:', error);
+                alert('Failed to manage product');
+            }
+        });
+
+        // Update popup settings
+        document.getElementById('updatePopupBtn').addEventListener('click', () => {
+            const interval = document.getElementById('popupInterval').value;
+            const enabled = document.getElementById('popupToggle').checked;
+            
+            // In a real implementation, this would call the API to update settings
+            alert(`Popup settings updated:\nEnabled: ${enabled}\nInterval: ${interval} seconds`);
+        });
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        });
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAdmin();
+            
+            // Load dashboard stats by default
+            loadAdminStats();
+            
+            // Show dashboard section by default
+            showSection('dashboard');
+        });
+    </script>
+</body>
+</html>

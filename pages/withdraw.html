@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Withdrawal - InvestPro</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        .card {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .input-field:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+        .logo {
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.5rem;
+        }
+        .method-card {
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .method-card.active {
+            border-color: #667eea;
+            background-color: #f0f4ff;
+        }
+        .balance-card {
+            background: linear-gradient(135deg, #36d1dc 0%, #5b86e5 100%);
+            color: white;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm py-4 px-6">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="logo">InvestPro</div>
+            <nav>
+                <ul class="flex space-x-6">
+                    <li><a href="dashboard.html" class="text-gray-700 hover:text-blue-600 font-medium">Dashboard</a></li>
+                    <li><a href="plans.html" class="text-gray-700 hover:text-blue-600 font-medium">Plans</a></li>
+                    <li><a href="withdraw.html" class="text-blue-600 font-medium">Withdraw</a></li>
+                    <li><a href="transactions.html" class="text-gray-700 hover:text-blue-600 font-medium">Transactions</a></li>
+                </ul>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <span class="text-gray-700">Welcome, <span id="username">User</span></span>
+                <button id="logoutBtn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow py-8 px-4">
+        <div class="max-w-3xl mx-auto">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-white mb-2">Withdraw Funds</h1>
+                <p class="text-lg text-white opacity-90">Choose your withdrawal method</p>
+            </div>
+
+            <div class="card bg-white p-6 mb-8">
+                <div class="balance-card rounded-lg p-6 mb-6 text-center">
+                    <p class="text-lg">Your Current Balance</p>
+                    <p class="text-3xl font-bold mt-2" id="balance">₹0.00</p>
+                    <p class="text-sm mt-2 opacity-80">Minimum withdrawal: ₹100</p>
+                </div>
+
+                <form id="withdrawalForm">
+                    <div class="mb-6">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="amount">
+                            Withdrawal Amount
+                        </label>
+                        <input type="number" id="amount" name="amount" min="100" required
+                            class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <p class="text-gray-500 text-xs mt-1">Minimum withdrawal amount is ₹100</p>
+                    </div>
+
+                    <div class="mb-6">
+                        <p class="block text-gray-700 text-sm font-bold mb-3">Select Withdrawal Method</p>
+                        <div class="grid grid-cols-1 gap-4">
+                            <div class="method-card" data-method="bank">
+                                <div class="flex items-center">
+                                    <i class="fas fa-university text-2xl mr-3 text-blue-600"></i>
+                                    <div>
+                                        <h3 class="font-bold">Bank Transfer</h3>
+                                        <p class="text-sm text-gray-600">Direct to bank account</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="method-card" data-method="upi">
+                                <div class="flex items-center">
+                                    <i class="fab fa-cc-visa text-2xl mr-3 text-green-600"></i>
+                                    <div>
+                                        <h3 class="font-bold">UPI</h3>
+                                        <p class="text-sm text-gray-600">Instant transfer</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="method" name="method" value="bank">
+                    </div>
+
+                    <!-- Bank Details -->
+                    <div id="bankDetails" class="mb-6 space-y-4">
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="bank_name">
+                                Bank Name
+                            </label>
+                            <input type="text" id="bank_name" name="bank_name" required
+                                class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div class="grid grid-cols-1 gap-4">
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="account_number">
+                                    Account Number
+                                </label>
+                                <input type="text" id="account_number" name="account_number" required
+                                    class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="confirm_account_number">
+                                    Confirm Account Number
+                                </label>
+                                <input type="text" id="confirm_account_number" required
+                                    class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="ifsc_code">
+                                IFSC Code
+                            </label>
+                            <input type="text" id="ifsc_code" name="ifsc_code" required
+                                class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="account_holder_name">
+                                Account Holder Name
+                            </label>
+                            <input type="text" id="account_holder_name" name="account_holder_name" required
+                                class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    </div>
+
+                    <!-- UPI Details -->
+                    <div id="upiDetails" class="mb-6 space-y-4 hidden">
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="upi_id">
+                                UPI ID
+                            </label>
+                            <input type="text" id="upi_id" name="upi_id"
+                                class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <p class="text-gray-500 text-xs mt-1">Enter your UPI ID (e.g., yourname@upi)</p>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary w-full py-3 px-4 text-white font-bold rounded-lg">
+                        Request Withdrawal
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-gray-600">
+            <p>© 2025 InvestPro. All rights reserved.</p>
+            <p class="mt-2">Secure Investment Platform | Trusted by thousands of investors</p>
+        </div>
+    </footer>
+
+    <script>
+        // Get user info from localStorage
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            document.getElementById('username').textContent = user.name || user.username;
+            
+            // Set balance in the display
+            document.getElementById('balance').textContent = `₹${user.balance.toFixed(2)}`;
+        }
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        });
+
+        // Toggle between bank and UPI methods
+        document.querySelectorAll('.method-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Remove active class from all cards
+                document.querySelectorAll('.method-card').forEach(c => {
+                    c.classList.remove('active');
+                });
+                
+                // Add active class to clicked card
+                this.classList.add('active');
+                
+                // Update hidden method input
+                const method = this.getAttribute('data-method');
+                document.getElementById('method').value = method;
+                
+                // Show/hide relevant details
+                if (method === 'bank') {
+                    document.getElementById('bankDetails').classList.remove('hidden');
+                    document.getElementById('upiDetails').classList.add('hidden');
+                } else {
+                    document.getElementById('bankDetails').classList.add('hidden');
+                    document.getElementById('upiDetails').classList.remove('hidden');
+                }
+            });
+        });
+
+        // Set default to bank method as active
+        document.querySelector('.method-card[data-method="bank"]').classList.add('active');
+
+        // Form validation
+        document.getElementById('withdrawalForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+            
+            // Additional validation
+            if (parseFloat(data.amount) > parseFloat(document.getElementById('balance').textContent.replace('₹', ''))) {
+                alert('Insufficient balance for this withdrawal');
+                return;
+            }
+            
+            if (parseFloat(data.amount) < 100) {
+                alert('Minimum withdrawal amount is ₹100');
+                return;
+            }
+            
+            if (data.method === 'bank') {
+                if (data.account_number !== document.getElementById('confirm_account_number').value) {
+                    alert('Account numbers do not match');
+                    return;
+                }
+            }
+            
+            // Prepare data for API call
+            const payload = {
+                amount: parseFloat(data.amount),
+                method: data.method
+            };
+            
+            if (data.method === 'bank') {
+                payload.bank_name = data.bank_name;
+                payload.ifsc_code = data.ifsc_code;
+                payload.account_number = data.account_number;
+                payload.account_holder_name = data.account_holder_name;
+            } else {
+                payload.upi_id = data.upi_id;
+            }
+            
+            try {
+                const token = localStorage.getItem('token');
+                
+                const response = await fetch('/api/withdrawals/request', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    alert('Withdrawal request submitted successfully! It will be processed shortly.');
+                    e.target.reset();
+                    document.getElementById('bankDetails').classList.remove('hidden');
+                    document.getElementById('upiDetails').classList.add('hidden');
+                    document.querySelector('.method-card[data-method="bank"]').classList.add('active');
+                    document.querySelector('.method-card[data-method="upi"]').classList.remove('active');
+                } else {
+                    alert(result.error || 'Withdrawal request failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred during withdrawal request');
+            }
+        });
+    </script>
+</body>
+</html>

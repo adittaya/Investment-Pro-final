@@ -1,0 +1,24 @@
+// Supabase Configuration
+const SUPABASE_URL = 'https://wmzykidfnmocxzmgbbph.supabase.co';
+const SUPABASE_ACCES_KEY = 'YOUR_SUPABASE_ACCESS_KEY';
+const SUPABASE_API_KEY = 'YOUR_SUPABASE_API_KEY';
+const JWT_SECRET = 'YOUR_JWT_SECRET';
+
+// Render API Key
+const RENDER_API_KEY = 'YOUR_RENDER_API_KEY';
+
+// Netlify Auth Token
+const NETLIFY_AUTH_TOKEN = 'YOUR_NETLIFY_AUTH_TOKEN';
+
+// GitHub Token
+const GITHUB_TOKEN = 'YOUR_GITHUB_TOKEN';
+
+module.exports = {
+  SUPABASE_URL,
+  SUPABASE_ACCES_KEY,
+  SUPABASE_API_KEY,
+  JWT_SECRET,
+  RENDER_API_KEY,
+  NETLIFY_AUTH_TOKEN,
+  GITHUB_TOKEN
+};

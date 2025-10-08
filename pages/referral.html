@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Referral Program - InvestPro</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        .card {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .btn-secondary {
+            background: linear-gradient(135deg, #36d1dc 0%, #5b86e5 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .input-field:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+        .logo {
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.5rem;
+        }
+        .referral-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        }
+        .commission-card {
+            border-left: 4px solid #667eea;
+        }
+        .level-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .level-1 { background-color: #fef3c7; color: #d97706; }
+        .level-2 { background-color: #dbeafe; color: #2563eb; }
+        .level-3 { background-color: #ede9fe; color: #7c3aed; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm py-4 px-6">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="logo">InvestPro</div>
+            <nav>
+                <ul class="flex space-x-6">
+                    <li><a href="dashboard.html" class="text-gray-700 hover:text-blue-600 font-medium">Dashboard</a></li>
+                    <li><a href="plans.html" class="text-gray-700 hover:text-blue-600 font-medium">Plans</a></li>
+                    <li><a href="recharge.html" class="text-gray-700 hover:text-blue-600 font-medium">Recharge</a></li>
+                    <li><a href="withdraw.html" class="text-gray-700 hover:text-blue-600 font-medium">Withdraw</a></li>
+                    <li><a href="referral.html" class="text-blue-600 font-medium">Referral</a></li>
+                </ul>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <span class="text-gray-700">Welcome, <span id="username">User</span></span>
+                <button id="logoutBtn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow py-8 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-white mb-2">Referral Program</h1>
+                <p class="text-lg text-white opacity-90">Earn commissions by referring friends to InvestPro</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Referral Info -->
+                <div class="lg:col-span-2">
+                    <div class="card referral-card p-6 mb-8">
+                        <h2 class="text-xl font-bold text-gray-800 mb-4">How It Works</h2>
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <div class="bg-blue-100 p-3 rounded-full mr-4">
+                                    <i class="fas fa-share-alt text-blue-600"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-800">Share Your Referral Link</h3>
+                                    <p class="text-gray-600">Share your unique referral code with friends and family.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="bg-green-100 p-3 rounded-full mr-4">
+                                    <i class="fas fa-user-plus text-green-600"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-800">They Sign Up</h3>
+                                    <p class="text-gray-600">When they sign up using your referral code, they're added to your referral network.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="bg-purple-100 p-3 rounded-full mr-4">
+                                    <i class="fas fa-coins text-purple-600"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-800">Earn Commissions</h3>
+                                    <p class="text-gray-600">Earn commissions when your referrals invest. 3 levels deep!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3-Level Commission Structure -->
+                    <div class="card referral-card p-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-4">Commission Structure</h2>
+                        <div class="space-y-4">
+                            <div class="commission-card card p-4">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h3 class="font-bold text-gray-800">Level 1 (Direct Referrals)</h3>
+                                        <p class="text-gray-600">32% commission on their investments</p>
+                                    </div>
+                                    <span class="level-badge level-1">L1</span>
+                                </div>
+                            </div>
+                            <div class="commission-card card p-4">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h3 class="font-bold text-gray-800">Level 2 (Referrals of Referrals)</h3>
+                                        <p class="text-gray-600">2% commission on their investments</p>
+                                    </div>
+                                    <span class="level-badge level-2">L2</span>
+                                </div>
+                            </div>
+                            <div class="commission-card card p-4">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h3 class="font-bold text-gray-800">Level 3 (Referrals of L2)</h3>
+                                        <p class="text-gray-600">1% commission on their investments</p>
+                                    </div>
+                                    <span class="level-badge level-3">L3</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Referral Actions -->
+                <div>
+                    <div class="card referral-card p-6 mb-8">
+                        <h2 class="text-xl font-bold text-gray-800 mb-4">Your Referral Code</h2>
+                        <div class="flex mb-4">
+                            <input type="text" id="referralCode" class="w-full px-4 py-3 border border-gray-300 rounded-l-lg" readonly>
+                            <button id="copyReferral" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-3 rounded-r-lg">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">Share this code with friends to start earning commissions!</p>
+                        <button id="shareBtn" class="btn-primary w-full py-3 px-4 text-white font-bold rounded-lg">
+                            <i class="fas fa-share mr-2"></i>Share Referral Link
+                        </button>
+                    </div>
+
+                    <div class="card referral-card p-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-4">Apply Referral Code</h2>
+                        <p class="text-gray-600 text-sm mb-4">If you have a referral code, apply it here:</p>
+                        <form id="applyReferralForm">
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="referralInput">
+                                    Enter Referral Code
+                                </label>
+                                <input type="text" id="referralInput" name="referral_code" required
+                                    class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <button type="submit" class="btn-primary w-full py-3 px-4 text-white font-bold rounded-lg">
+                                Apply Referral Code
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Referral Statistics -->
+            <div class="card referral-card p-6 mt-8">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Referral Statistics</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="text-center p-4 border rounded-lg">
+                        <p class="text-3xl font-bold text-blue-600" id="totalReferrals">0</p>
+                        <p class="text-gray-600">Total Referrals</p>
+                    </div>
+                    <div class="text-center p-4 border rounded-lg">
+                        <p class="text-3xl font-bold text-green-600" id="totalCommission">₹0.00</p>
+                        <p class="text-gray-600">Total Commission Earned</p>
+                    </div>
+                    <div class="text-center p-4 border rounded-lg">
+                        <p class="text-3xl font-bold text-purple-600" id="activeReferrals">0</p>
+                        <p class="text-gray-600">Active Referrals</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Referral Team -->
+            <div class="card referral-card p-6 mt-8">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Your Referral Team</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Level</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recharges</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Commission</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date Joined</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teamTableBody" class="bg-white divide-y divide-gray-200">
+                            <!-- Team data will be loaded here -->
+                            <tr>
+                                <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                                    No referrals yet. Start sharing your code!
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-gray-600">
+            <p>© 2025 InvestPro. All rights reserved.</p>
+            <p class="mt-2">Secure Investment Platform | Trusted by thousands of investors</p>
+        </div>
+    </footer>
+
+    <script>
+        // Get user info from localStorage
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            document.getElementById('username').textContent = user.name || user.username;
+            
+            // Set referral code
+            document.getElementById('referralCode').value = user.referral_code || 'N/A';
+        }
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        });
+
+        // Copy referral code functionality
+        document.getElementById('copyReferral').addEventListener('click', () => {
+            const referralCode = document.getElementById('referralCode');
+            referralCode.select();
+            document.execCommand('copy');
+            
+            // Show feedback
+            const originalText = document.getElementById('copyReferral').innerHTML;
+            document.getElementById('copyReferral').innerHTML = '<i class="fas fa-check"></i>';
+            setTimeout(() => {
+                document.getElementById('copyReferral').innerHTML = originalText;
+            }, 2000);
+        });
+
+        // Share referral functionality
+        document.getElementById('shareBtn').addEventListener('click', () => {
+            const referralCode = document.getElementById('referralCode').value;
+            if (navigator.share) {
+                navigator.share({
+                    title: 'InvestPro Referral',
+                    text: `Join InvestPro using my referral code: ${referralCode}`,
+                    url: window.location.origin
+                })
+                .catch(console.error);
+            } else {
+                // Fallback: copy to clipboard
+                document.getElementById('referralCode').select();
+                document.execCommand('copy');
+                alert('Referral code copied to clipboard!');
+            }
+        });
+
+        // Apply referral form submission
+        document.getElementById('applyReferralForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const referralCode = document.getElementById('referralInput').value.trim();
+            
+            if (!referralCode) {
+                alert('Please enter a referral code');
+                return;
+            }
+
+            try {
+                const token = localStorage.getItem('token');
+                
+                const response = await fetch('/api/referral/verify-referral', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ referral_code: referralCode })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    alert('Referral code applied successfully!');
+                    document.getElementById('applyReferralForm').reset();
+                } else {
+                    alert(result.error || 'Failed to apply referral code');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while applying referral code');
+            }
+        });
+
+        // Load referral statistics
+        async function loadReferralStats() {
+            const token = localStorage.getItem('token');
+            
+            try {
+                // In a real implementation, we would fetch referral stats from the API
+                // For this example, we'll use mock data
+                document.getElementById('totalReferrals').textContent = '0';
+                document.getElementById('totalCommission').textContent = '₹0.00';
+                document.getElementById('activeReferrals').textContent = '0';
+            } catch (error) {
+                console.error('Error loading referral stats:', error);
+            }
+        }
+
+        // Load referral team
+        async function loadReferralTeam() {
+            const token = localStorage.getItem('token');
+            
+            try {
+                // In a real implementation, we would fetch referral team data from the API
+                // For this example, we'll leave the table with the "no referrals" message
+            } catch (error) {
+                console.error('Error loading referral team:', error);
+            }
+        }
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            loadReferralStats();
+            loadReferralTeam();
+        });
+    </script>
+</body>
+</html>

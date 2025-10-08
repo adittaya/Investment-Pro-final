@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recharge - InvestPro</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        .card {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .input-field:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+        .logo {
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.5rem;
+        }
+        .qr-container {
+            border: 5px solid white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            background-color: white;
+            padding: 15px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        .balance-card {
+            background: linear-gradient(135deg, #36d1dc 0%, #5b86e5 100%);
+            color: white;
+        }
+        .step {
+            counter-increment: step-counter;
+            position: relative;
+            padding-left: 3rem;
+            margin-bottom: 2rem;
+        }
+        .step:before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm py-4 px-6">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="logo">InvestPro</div>
+            <nav>
+                <ul class="flex space-x-6">
+                    <li><a href="dashboard.html" class="text-gray-700 hover:text-blue-600 font-medium">Dashboard</a></li>
+                    <li><a href="recharge.html" class="text-blue-600 font-medium">Recharge</a></li>
+                    <li><a href="withdraw.html" class="text-gray-700 hover:text-blue-600 font-medium">Withdraw</a></li>
+                    <li><a href="transactions.html" class="text-gray-700 hover:text-blue-600 font-medium">Transactions</a></li>
+                </ul>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <span class="text-gray-700">Welcome, <span id="username">User</span></span>
+                <button id="logoutBtn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow py-8 px-4">
+        <div class="max-w-3xl mx-auto">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-white mb-2">Add Money to Your Account</h1>
+                <p class="text-lg text-white opacity-90">Recharge your wallet using UPI</p>
+            </div>
+
+            <div class="card bg-white p-6 mb-8">
+                <div class="balance-card rounded-lg p-6 mb-6 text-center">
+                    <p class="text-lg">Your Current Balance</p>
+                    <p class="text-3xl font-bold mt-2" id="balance">₹0.00</p>
+                </div>
+
+                <div class="grid grid-cols-1 gap-6">
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-800 mb-4">Recharge Amount</h2>
+                        <form id="rechargeForm">
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="amount">
+                                    Enter Amount
+                                </label>
+                                <input type="number" id="amount" name="amount" min="10" required
+                                    class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <p class="text-gray-500 text-xs mt-1">Enter amount in INR (Minimum ₹10)</p>
+                            </div>
+                            
+                            <button type="submit" class="btn-primary w-full py-3 px-4 text-white font-bold rounded-lg">
+                                <i class="fas fa-rupee-sign mr-2"></i>Generate UPI QR
+                            </button>
+                        </form>
+
+                        <div id="rechargeInfo" class="mt-6 hidden">
+                            <h3 class="font-bold text-lg text-gray-800 mb-2">Recharge Instructions</h3>
+                            <div class="space-y-4">
+                                <div class="step">
+                                    <h4 class="font-bold text-gray-700">Scan the QR Code</h4>
+                                    <p class="text-gray-600 text-sm">Use any UPI app to scan the QR code on the right</p>
+                                </div>
+                                <div class="step">
+                                    <h4 class="font-bold text-gray-700">Enter the Amount</h4>
+                                    <p class="text-gray-600 text-sm">Make sure the amount in your UPI app matches ₹<span id="displayAmount">0.00</span></p>
+                                </div>
+                                <div class="step">
+                                    <h4 class="font-bold text-gray-700">Enter UTR Number</h4>
+                                    <p class="text-gray-600 text-sm">After payment, enter the UTR number in the box below</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="utrSection" class="mt-6 hidden">
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="utr">
+                                    Enter UTR Number
+                                </label>
+                                <input type="text" id="utr" name="utr"
+                                    class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <p class="text-gray-500 text-xs mt-1">UTR (Unique Transaction Reference) from your UPI app</p>
+                            </div>
+                            
+                            <button id="submitUtrBtn" class="btn-primary w-full py-3 px-4 text-white font-bold rounded-lg">
+                                Submit UTR
+                            </button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-800 mb-4">UPI Payment</h2>
+                        <div id="qrSection" class="hidden">
+                            <div class="qr-container mb-4">
+                                <img id="qrCode" src="/storage/emulated/O/Pictures/Screenshots/Screenshot_20251007_153057.jpg" alt="UPI QR Code" class="w-full">
+                            </div>
+                            <p class="text-center text-gray-700 font-medium mb-2">Pay ₹<span id="qrAmount">0.00</span></p>
+                            <p class="text-center text-gray-500 text-sm">To: 7047571829@yespop</p>
+                        </div>
+                        
+                        <div id="paymentConfirmation" class="text-center mt-6 hidden">
+                            <i class="fas fa-check-circle text-green-500 text-5xl mb-4"></i>
+                            <p class="text-xl font-bold text-green-600">Payment Successful!</p>
+                            <p class="text-gray-600 mt-2">Your recharge request has been submitted and will be verified shortly.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-gray-600">
+            <p>© 2025 InvestPro. All rights reserved.</p>
+            <p class="mt-2">Secure Investment Platform | Trusted by thousands of investors</p>
+        </div>
+    </footer>
+
+    <script>
+        // Get user info from localStorage
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            document.getElementById('username').textContent = user.name || user.username;
+            
+            // Set balance in the display
+            document.getElementById('balance').textContent = `₹${user.balance.toFixed(2)}`;
+        }
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        });
+
+        // Handle recharge form submission
+        document.getElementById('rechargeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const amount = parseFloat(document.getElementById('amount').value);
+            
+            if (isNaN(amount) || amount < 10) {
+                alert('Please enter a valid amount (minimum ₹10)');
+                return;
+            }
+
+            try {
+                const token = localStorage.getItem('token');
+                
+                const response = await fetch('/api/recharge/request', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ amount: amount })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    // Show QR section and instructions
+                    document.getElementById('displayAmount').textContent = amount.toFixed(2);
+                    document.getElementById('qrAmount').textContent = amount.toFixed(2);
+                    
+                    // In a real implementation, you would generate an actual QR code
+                    // For this example, I'll use a placeholder image
+                    document.getElementById('qrCode').src = 'https://placehold.co/300/667eea/white?text=UPI+QR+Code%0APay+₹' + amount.toFixed(2);
+                    
+                    document.getElementById('qrSection').classList.remove('hidden');
+                    document.getElementById('rechargeInfo').classList.remove('hidden');
+                    document.getElementById('utrSection').classList.remove('hidden');
+                    
+                    alert('Recharge request created successfully! Please make payment using the QR code.');
+                } else {
+                    alert(result.error || 'Recharge request failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while creating recharge request');
+            }
+        });
+
+        // Handle UTR submission
+        document.getElementById('submitUtrBtn').addEventListener('click', async () => {
+            const utr = document.getElementById('utr').value.trim();
+            
+            if (!utr) {
+                alert('Please enter the UTR number from your UPI app');
+                return;
+            }
+
+            // In a real implementation, you would send the UTR to the backend for verification
+            // For this example, we'll just show a success message
+            document.getElementById('paymentConfirmation').classList.remove('hidden');
+            document.getElementById('rechargeForm').classList.add('hidden');
+            document.getElementById('rechargeInfo').classList.add('hidden');
+            document.getElementById('utrSection').classList.add('hidden');
+            
+            alert('UTR submitted successfully! Our team will verify your payment and credit your account shortly.');
+        });
+    </script>
+</body>
+</html>

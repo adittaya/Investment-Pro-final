@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Module - InvestPro</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        .card {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .input-field:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+        .logo {
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.5rem;
+        }
+        .team-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        }
+        .level-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .level-1 { background-color: #fef3c7; color: #d97706; }
+        .level-2 { background-color: #dbeafe; color: #2563eb; }
+        .level-3 { background-color: #ede9fe; color: #7c3aed; }
+        .team-stat-card {
+            border-left: 4px solid #667eea;
+        }
+        .active-user { background-color: #e6fffa; }
+        .inactive-user { background-color: #fafafa; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm py-4 px-6">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="logo">InvestPro</div>
+            <nav>
+                <ul class="flex space-x-6">
+                    <li><a href="dashboard.html" class="text-gray-700 hover:text-blue-600 font-medium">Dashboard</a></li>
+                    <li><a href="plans.html" class="text-gray-700 hover:text-blue-600 font-medium">Plans</a></li>
+                    <li><a href="recharge.html" class="text-gray-700 hover:text-blue-600 font-medium">Recharge</a></li>
+                    <li><a href="withdraw.html" class="text-gray-700 hover:text-blue-600 font-medium">Withdraw</a></li>
+                    <li><a href="referral.html" class="text-gray-700 hover:text-blue-600 font-medium">Referral</a></li>
+                    <li><a href="team.html" class="text-blue-600 font-medium">Team</a></li>
+                </ul>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <span class="text-gray-700">Welcome, <span id="username">User</span></span>
+                <button id="logoutBtn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow py-8 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-white mb-2">Team Module</h1>
+                <p class="text-lg text-white opacity-90">Track and manage your referral team</p>
+            </div>
+
+            <!-- Team Overview -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
+                <div class="card team-stat-card p-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-600">Total Team Size</p>
+                            <p class="text-2xl font-bold mt-1" id="totalTeamSize">0</p>
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded-full">
+                            <i class="fas fa-users text-blue-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card team-stat-card p-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-600">L1 Team</p>
+                            <p class="text-2xl font-bold mt-1" id="l1TeamSize">0</p>
+                        </div>
+                        <div class="bg-yellow-100 p-3 rounded-full">
+                            <i class="fas fa-user-friends text-yellow-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card team-stat-card p-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-600">L2 Team</p>
+                            <p class="text-2xl font-bold mt-1" id="l2TeamSize">0</p>
+                        </div>
+                        <div class="bg-green-100 p-3 rounded-full">
+                            <i class="fas fa-user-plus text-green-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card team-stat-card p-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-600">L3 Team</p>
+                            <p class="text-2xl font-bold mt-1" id="l3TeamSize">0</p>
+                        </div>
+                        <div class="bg-purple-100 p-3 rounded-full">
+                            <i class="fas fa-user-circle text-purple-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Activity -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
+                <div class="card team-stat-card p-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-600">Active Members</p>
+                            <p class="text-2xl font-bold mt-1" id="activeMembers">0</p>
+                        </div>
+                        <div class="bg-green-100 p-3 rounded-full">
+                            <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card team-stat-card p-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-600">Inactive Members</p>
+                            <p class="text-2xl font-bold mt-1" id="inactiveMembers">0</p>
+                        </div>
+                        <div class="bg-gray-100 p-3 rounded-full">
+                            <i class="fas fa-times-circle text-gray-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card team-stat-card p-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-600">Team Recharges</p>
+                            <p class="text-2xl font-bold mt-1" id="teamRecharges">₹0.00</p>
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded-full">
+                            <i class="fas fa-rupee-sign text-blue-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card team-stat-card p-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-600">Your Commission</p>
+                            <p class="text-2xl font-bold mt-1" id="yourCommission">₹0.00</p>
+                        </div>
+                        <div class="bg-yellow-100 p-3 rounded-full">
+                            <i class="fas fa-coins text-yellow-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Tabs -->
+            <div class="card team-card p-6 mb-8">
+                <div class="border-b border-gray-200 mb-6">
+                    <nav class="-mb-px flex space-x-8">
+                        <button class="tab-button active border-blue-500 text-blue-600 font-medium py-4 px-1 border-b-2" data-tab="l1">Level 1 (Direct)</button>
+                        <button class="tab-button border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium py-4 px-1 border-b-2" data-tab="l2">Level 2</button>
+                        <button class="tab-button border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium py-4 px-1 border-b-2" data-tab="l3">Level 3</button>
+                    </nav>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Level</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recharges</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Commission</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Join Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teamTableBody" class="bg-white divide-y divide-gray-200">
+                            <!-- Team data will be loaded here -->
+                            <tr>
+                                <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                    No team members yet. Start sharing your referral code!
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Commission Controls -->
+            <div class="card team-card p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Commission Controls</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="font-bold text-gray-700 mb-2">Commission Settings</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span>Level 1 Commission</span>
+                                <span class="font-medium">32%</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Level 2 Commission</span>
+                                <span class="font-medium">2%</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Level 3 Commission</span>
+                                <span class="font-medium">1%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-700 mb-2">Commission Calculator</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-1" for="calculateAmount">Investment Amount</label>
+                                <input type="number" id="calculateAmount" class="input-field w-full px-3 py-2 border border-gray-300 rounded-lg" placeholder="Enter amount">
+                            </div>
+                            <div id="commissionResult" class="hidden">
+                                <p class="text-blue-600 font-medium">L1 Commission: ₹<span id="l1Commission">0.00</span></p>
+                                <p class="text-green-600 font-medium">L2 Commission: ₹<span id="l2Commission">0.00</span></p>
+                                <p class="text-purple-600 font-medium">L3 Commission: ₹<span id="l3Commission">0.00</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-gray-600">
+            <p>© 2025 InvestPro. All rights reserved.</p>
+            <p class="mt-2">Secure Investment Platform | Trusted by thousands of investors</p>
+        </div>
+    </footer>
+
+    <script>
+        // Get user info from localStorage
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            document.getElementById('username').textContent = user.name || user.username;
+        }
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        });
+
+        // Tab switching functionality
+        const tabButtons = document.querySelectorAll('.tab-button');
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                tabButtons.forEach(btn => {
+                    btn.classList.remove('active', 'text-blue-600', 'border-blue-500');
+                    btn.classList.add('text-gray-500', 'border-transparent');
+                });
+                
+                // Add active class to clicked button
+                this.classList.remove('text-gray-500', 'border-transparent');
+                this.classList.add('active', 'text-blue-600', 'border-blue-500');
+                
+                // In a real implementation, we would load the corresponding team data
+                // For this example, we'll just show a message
+                document.getElementById('teamTableBody').innerHTML = `
+                    <tr>
+                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                            Loading team data for ${this.textContent.trim()}...
+                        </td>
+                    </tr>
+                `;
+            });
+        });
+
+        // Commission calculator
+        document.getElementById('calculateAmount').addEventListener('input', function() {
+            const amount = parseFloat(this.value) || 0;
+            
+            if (amount > 0) {
+                document.getElementById('l1Commission').textContent = (amount * 0.32).toFixed(2);
+                document.getElementById('l2Commission').textContent = (amount * 0.02).toFixed(2);
+                document.getElementById('l3Commission').textContent = (amount * 0.01).toFixed(2);
+                document.getElementById('commissionResult').classList.remove('hidden');
+            } else {
+                document.getElementById('commissionResult').classList.add('hidden');
+            }
+        });
+
+        // Load team statistics
+        async function loadTeamStats() {
+            const token = localStorage.getItem('token');
+            
+            try {
+                // In a real implementation, we would fetch team stats from the API
+                // For this example, we'll use mock data
+                document.getElementById('totalTeamSize').textContent = '0';
+                document.getElementById('l1TeamSize').textContent = '0';
+                document.getElementById('l2TeamSize').textContent = '0';
+                document.getElementById('l3TeamSize').textContent = '0';
+                document.getElementById('activeMembers').textContent = '0';
+                document.getElementById('inactiveMembers').textContent = '0';
+                document.getElementById('teamRecharges').textContent = '₹0.00';
+                document.getElementById('yourCommission').textContent = '₹0.00';
+            } catch (error) {
+                console.error('Error loading team stats:', error);
+            }
+        }
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTeamStats();
+        });
+    </script>
+</body>
+</html>
