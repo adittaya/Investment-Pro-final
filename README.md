@@ -96,3 +96,37 @@ npm run dev
 ## Important Notice
 
 This is a demo platform created for educational purposes. It is not a real investment service. Always be cautious with real financial investments.
+
+## Deployment
+
+### Deploy to Render
+
+This application can be deployed to Render with the following steps:
+
+1. Create a Render account at https://render.com
+2. Connect your GitHub repository
+3. Create a new Web Service using this repository
+4. Use these build settings:
+   - Environment: Node
+   - Build Command: `npm install`
+   - Start Command: `npm start`
+5. Set the required environment variables in Render's dashboard:
+   - SUPABASE_URL
+   - SUPABASE_ACCES_KEY
+   - SUPABASE_API_KEY
+   - JWT_SECRET
+6. Deploy the service
+
+For detailed deployment instructions, see RENDER_DEPLOYMENT.md
+
+### Environment Variables
+
+The application requires the following environment variables:
+
+- `SUPABASE_URL` - Your Supabase project URL
+- `SUPABASE_ACCES_KEY` - Your Supabase access key
+- `SUPABASE_API_KEY` - Your Supabase API key
+- `JWT_SECRET` - Secret for JSON Web Token signing
+- `PORT` - Port number (automatically set by Render)
+
+See `.env.example` for reference format.
