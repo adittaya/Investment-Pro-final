@@ -316,7 +316,7 @@
             try {
                 const token = localStorage.getItem('token');
                 
-                const response = await fetch('/api/referral/verify-referral', {
+                const response = await fetch(CONFIG.API_BASE_URL + '/api/referral/verify-referral', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,

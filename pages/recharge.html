@@ -219,7 +219,7 @@
             try {
                 const token = localStorage.getItem('token');
                 
-                const response = await fetch('/api/recharge/request', {
+                const response = await fetch(CONFIG.API_BASE_URL + '/api/recharge/request', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,

@@ -191,7 +191,7 @@
             
             try {
                 // Fetch transactions from the API
-                const response = await fetch('/api/user/transactions', {
+                const response = await fetch(CONFIG.API_BASE_URL + '/api/user/transactions', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,

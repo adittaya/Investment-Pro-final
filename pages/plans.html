@@ -476,7 +476,7 @@
 
             try {
                 // First check user balance
-                const userResponse = await fetch('/api/user/profile', {
+                const userResponse = await fetch(CONFIG.API_BASE_URL + '/api/user/profile', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -501,7 +501,7 @@
                 }
 
                 // Make purchase request
-                const response = await fetch('/api/products/purchase', {
+                const response = await fetch(CONFIG.API_BASE_URL + '/api/products/purchase', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,

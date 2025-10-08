@@ -380,7 +380,7 @@
             const token = localStorage.getItem('token');
             
             try {
-                const response = await fetch('/api/user/profile', {
+                const response = await fetch(CONFIG.API_BASE_URL + '/api/user/profile', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -409,7 +409,7 @@
             const token = localStorage.getItem('token');
             
             try {
-                const response = await fetch('/api/user/products', {
+                const response = await fetch(CONFIG.API_BASE_URL + '/api/user/products', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -485,7 +485,7 @@
             const token = localStorage.getItem('token');
             
             try {
-                const response = await fetch('/api/user/transactions', {
+                const response = await fetch(CONFIG.API_BASE_URL + '/api/user/transactions', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,

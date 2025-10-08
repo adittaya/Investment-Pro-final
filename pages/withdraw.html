@@ -282,7 +282,7 @@
             try {
                 const token = localStorage.getItem('token');
                 
-                const response = await fetch('/api/withdrawals/request', {
+                const response = await fetch(CONFIG.API_BASE_URL + '/api/withdrawals/request', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,

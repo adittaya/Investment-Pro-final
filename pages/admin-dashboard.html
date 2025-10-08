@@ -1253,7 +1253,7 @@
 
             try {
                 // Update the withdrawal status
-                const response = await fetch(`/api/admin/withdrawal/${withdrawalId}`, {
+                const response = await fetch(CONFIG.API_BASE_URL + "/api/admin/withdrawal/${withdrawalId}`, {
                     method: 'PUT',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -1397,7 +1397,7 @@
             const reason = document.getElementById('reason').value;
             
             try {
-                const response = await fetch(`/api/admin/user/${userId}/balance`, {
+                const response = await fetch(CONFIG.API_BASE_URL + "/api/admin/user/${userId}/balance`, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -1514,7 +1514,7 @@
                     updateData.password = password;
                 }
 
-                const response = await fetch(`/api/admin/user/${userId}`, {
+                const response = await fetch(CONFIG.API_BASE_URL + "/api/admin/user/${userId}`, {
                     method: 'PUT',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -1615,7 +1615,7 @@
             try {
                 if (id) {
                     // Update existing product
-                    const response = await fetch(`/api/admin/products/${id}`, {
+                    const response = await fetch(CONFIG.API_BASE_URL + "/api/admin/products/${id}`, {
                         method: 'PUT',
                         headers: {
                             'Authorization': `Bearer ${token}`,
