@@ -2,7 +2,13 @@
 const SUPABASE_URL = process.env.SUPABASE_URL || 'YOUR_SUPABASE_URL';
 const SUPABASE_ACCES_KEY = process.env.SUPABASE_ACCES_KEY || 'YOUR_SUPABASE_ACCESS_KEY';
 const SUPABASE_API_KEY = process.env.SUPABASE_API_KEY || 'YOUR_SUPABASE_API_KEY';
-const JWT_SECRET = process.env.JWT_SECRET || 'investment_platform_secret_key_for_dev_only';  // More secure default for development
+
+// JWT Secret - Important: In production, this MUST be set via environment variable
+const JWT_SECRET = process.env.JWT_SECRET || (() => {
+  console.warn('⚠️  WARNING: Using default JWT secret. This is insecure for production!');
+  console.warn('⚠️  Please set the JWT_SECRET environment variable.');
+  return 'investment_platform_secret_key_for_dev_only_256bits_long_enough_for_dev'; // Longer secret for better security
+})();
 
 // Render API Key
 const RENDER_API_KEY = process.env.RENDER_API_KEY || 'YOUR_RENDER_API_KEY';

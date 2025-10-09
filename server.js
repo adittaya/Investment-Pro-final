@@ -4,8 +4,33 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Enable CORS for all origins (in production, you should restrict this to your frontend domain)
-app.use(cors());
+// Enable CORS with options for production deployment 
+// For local development and when deployed with proxy, allow all origins
+// For production with specific frontend domain, configure origin accordingly
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // In production, replace with your specific frontend domains
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'http://localhost:3001', 
+      'http://localhost:8080',
+      'http://localhost:8000',
+      'http://127.0.0.1:3000',
+      'http://127.0.0.1:3001',
+      'https://invest-proapp.netlify.app',  // Your Netlify deployment
+      process.env.FRONTEND_URL  // Allow setting frontend URL via environment variable
+    ].filter(Boolean); // Remove undefined values
+    
+    const isAllowed = !origin || allowedOrigins.includes(origin);
+    callback(null, isAllowed);
+  },
+  credentials: true
+};
+
+app.use(cors(corsOptions));
 
 // Middleware to parse JSON bodies
 app.use(express.json());
