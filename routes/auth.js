@@ -8,11 +8,22 @@ const { mockSupabase, findUserByPhone, findUserByUsername, findUserByReferralCod
 // Registration route
 router.post('/register', async (req, res) => {
   try {
+    // Debugging: log the received data
+    console.log('Registration request body:', req.body);
+    
     const { name, username, phone_number, password, confirm_password, referral_code } = req.body;
 
     // Validation
+    console.log('Received fields:', { name, username, phone_number, password, confirm_password });
+    
     if (!name || !username || !phone_number || !password || !confirm_password) {
-      return res.status(400).json({ error: 'All fields are required' });
+      const missingFields = [];
+      if (!name) missingFields.push('name');
+      if (!username) missingFields.push('username');
+      if (!phone_number) missingFields.push('phone_number');
+      if (!password) missingFields.push('password');
+      if (!confirm_password) missingFields.push('confirm_password');
+      return res.status(400).json({ error: `Missing required fields: ${missingFields.join(', ')}` });
     }
 
     if (password !== confirm_password) {

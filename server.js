@@ -10,6 +10,9 @@ app.use(cors());
 // Middleware to parse JSON bodies
 app.use(express.json());
 
+// Middleware to parse URL-encoded form data
+app.use(express.urlencoded({ extended: true }));
+
 // Serve static files from the 'pages' directory
 app.use(express.static(path.join(__dirname, 'pages')));
 
