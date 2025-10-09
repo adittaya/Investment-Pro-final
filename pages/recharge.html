@@ -143,6 +143,9 @@
                         </div>
 
                         <div id="utrSection" class="mt-6 hidden">
+                            <!-- Hidden input to store recharge ID -->
+                            <input type="hidden" id="rechargeIdInput" />
+                            
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2" for="utr">
                                     Enter UTR Number
@@ -243,6 +246,9 @@
                     document.getElementById('rechargeInfo').classList.remove('hidden');
                     document.getElementById('utrSection').classList.remove('hidden');
                     
+                    // Store the rechargeId in the hidden input
+                    document.getElementById('rechargeIdInput').value = data.recharge.id;
+                    
                     alert('Recharge request created successfully! Please make payment using the QR code.');
                 } else {
                     alert(result.error || 'Recharge request failed');
@@ -256,20 +262,52 @@
         // Handle UTR submission
         document.getElementById('submitUtrBtn').addEventListener('click', async () => {
             const utr = document.getElementById('utr').value.trim();
+            const rechargeId = document.getElementById('rechargeIdInput').value; // Hidden input storing rechargeId
             
             if (!utr) {
                 alert('Please enter the UTR number from your UPI app');
                 return;
             }
 
-            // In a real implementation, you would send the UTR to the backend for verification
-            // For this example, we'll just show a success message
-            document.getElementById('paymentConfirmation').classList.remove('hidden');
-            document.getElementById('rechargeForm').classList.add('hidden');
-            document.getElementById('rechargeInfo').classList.add('hidden');
-            document.getElementById('utrSection').classList.add('hidden');
-            
-            alert('UTR submitted successfully! Our team will verify your payment and credit your account shortly.');
+            if (!rechargeId) {
+                alert('Recharge request not found. Please refresh the page and try again.');
+                return;
+            }
+
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    alert('Please log in first');
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                const response = await fetch(`${CONFIG.API_BASE_URL}/api/recharge/update-utr/${rechargeId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        utr: utr
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('paymentConfirmation').classList.remove('hidden');
+                    document.getElementById('rechargeForm').classList.add('hidden');
+                    document.getElementById('rechargeInfo').classList.add('hidden');
+                    document.getElementById('utrSection').classList.add('hidden');
+                    alert('UTR submitted successfully! Our team will verify your payment and credit your account shortly.');
+                } else {
+                    alert(result.error || 'Failed to submit UTR. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error submitting UTR:', error);
+                alert('An error occurred while submitting UTR. Please try again.');
+            }
         });
     </script>
 </body>

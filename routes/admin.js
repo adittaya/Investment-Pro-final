@@ -239,10 +239,10 @@ router.post('/verify-utr', authenticateToken, requireAdmin, async (req, res) => 
       return res.status(400).json({ error: 'Action must be approve or reject' });
     }
 
-    // Find the recharge request by UTR
-    const recharge = recharges.find(r => r.utr_number === utr || r.id === utr);
+    // Find the recharge request by UTR only (not by ID)
+    const recharge = recharges.find(r => r.utr_number === utr);
     if (!recharge) {
-      return res.status(404).json({ error: `Recharge with UTR ${utr} not found` });
+      return res.status(404).json({ error: `Recharge with UTR ${utr} not found or UTR number not submitted by user` });
     }
 
     // Check if already processed
@@ -252,7 +252,7 @@ router.post('/verify-utr', authenticateToken, requireAdmin, async (req, res) => 
 
     // Update status based on action
     const newStatus = action === 'approve' ? 'completed' : 'failed';
-    const rechargeIndex = recharges.findIndex(r => r.utr_number === utr || r.id === utr);
+    const rechargeIndex = recharges.findIndex(r => r.utr_number === utr);
     
     if (rechargeIndex !== -1) {
       recharges[rechargeIndex].status = newStatus;

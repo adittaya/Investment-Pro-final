@@ -1328,7 +1328,13 @@
                     const recharges = await rechargesResponse.json();
                     const recharge = recharges.find(r => r.id === rechargeId);
                     
-                    if (recharge && recharge.utr_number) {
+                    if (recharge) {
+                        // Check if UTR number has been submitted
+                        if (!recharge.utr_number) {
+                            alert('User has not submitted UTR number yet. Please ask the user to submit UTR number before approving.');
+                            return;
+                        }
+                        
                         // Found the recharge and it has a UTR number
                         const response = await fetch(CONFIG.API_BASE_URL + '/api/admin/verify-utr', {
                             method: 'POST',
