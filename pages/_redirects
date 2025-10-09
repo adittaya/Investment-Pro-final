@@ -1,2 +1,5 @@
+# API proxy redirects - forward API requests to the backend server
+/api/*  https://investment-pro-backend-fe0b.onrender.com/:splat  200
+
 # Netlify redirects for SPA routing
 /*    /index.html   200
