@@ -14,15 +14,16 @@ router.post('/register', async (req, res) => {
     const { name, username, phone_number, password, confirm_password, referral_code } = req.body;
 
     // Validation
-    console.log('Received fields:', { name, username, phone_number, password, confirm_password });
+    console.log('Received fields:', { name, username, phone_number, password, confirm_password, referral_code });
     
-    if (!name || !username || !phone_number || !password || !confirm_password) {
-      const missingFields = [];
-      if (!name) missingFields.push('name');
-      if (!username) missingFields.push('username');
-      if (!phone_number) missingFields.push('phone_number');
-      if (!password) missingFields.push('password');
-      if (!confirm_password) missingFields.push('confirm_password');
+    const missingFields = [];
+    if (!name) missingFields.push('name');
+    if (!username) missingFields.push('username');
+    if (!phone_number) missingFields.push('phone_number');
+    if (!password) missingFields.push('password');
+    if (!confirm_password) missingFields.push('confirm_password');
+    
+    if (missingFields.length > 0) {
       return res.status(400).json({ error: `Missing required fields: ${missingFields.join(', ')}` });
     }
 

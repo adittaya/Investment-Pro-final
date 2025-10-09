@@ -136,8 +136,15 @@
         document.getElementById('registrationForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const formData = new FormData(e.target);
-            const data = Object.fromEntries(formData);
+            // Get form values directly instead of using FormData
+            const data = {
+                name: document.getElementById('name').value.trim(),
+                username: document.getElementById('username').value.trim(),
+                phone_number: document.getElementById('phone').value.trim(),
+                password: document.getElementById('password').value,
+                confirm_password: document.getElementById('confirmPassword').value,
+                referral_code: document.getElementById('referral').value.trim() || ''
+            };
             
             try {
                 const response = await fetch(CONFIG.API_BASE_URL + '/api/auth/register', {
