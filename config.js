@@ -2,7 +2,7 @@
 const SUPABASE_URL = process.env.SUPABASE_URL || 'YOUR_SUPABASE_URL';
 const SUPABASE_ACCES_KEY = process.env.SUPABASE_ACCES_KEY || 'YOUR_SUPABASE_ACCESS_KEY';
 const SUPABASE_API_KEY = process.env.SUPABASE_API_KEY || 'YOUR_SUPABASE_API_KEY';
-const JWT_SECRET = process.env.JWT_SECRET || 'YOUR_JWT_SECRET';
+const JWT_SECRET = process.env.JWT_SECRET || 'investment_platform_secret_key_for_dev_only';  // More secure default for development
 
 // Render API Key
 const RENDER_API_KEY = process.env.RENDER_API_KEY || 'YOUR_RENDER_API_KEY';

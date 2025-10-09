@@ -2,7 +2,7 @@ const express = require('express');
 const config = require('../config');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const { users, userProducts, transactions, products } = require('../utils/mockDatabase');
+const { users, userProducts, transactions, products, withdrawals, recharges } = require('../utils/mockDatabase');
 
 // Middleware to verify JWT token
 const authenticateToken = (req, res, next) => {

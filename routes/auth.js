@@ -72,7 +72,8 @@ router.post('/register', async (req, res) => {
       password_hash: passwordHash,
       referral_code: referralCode,
       referred_by,
-      balance: 0,
+      balance: 0,           // Profit balance (withdrawable)
+      recharge_balance: 0,  // Recharge balance (for purchasing plans)
       total_invested: 0,
       total_withdrawn: 0,
       created_at: new Date().toISOString(),
