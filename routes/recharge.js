@@ -73,7 +73,7 @@ router.post('/update-utr/:rechargeId', authenticateToken, async (req, res) => {
     }
 
     // Update UTR
-    recharges[rechargeIndex].reference_id = utr;
+    recharges[rechargeIndex].utr_number = utr;
 
     return res.status(200).json({ 
       message: 'UTR submitted successfully. Admin will verify it shortly.',

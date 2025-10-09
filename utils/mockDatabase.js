@@ -15,7 +15,8 @@ let users = [
     password_hash: bcrypt.hashSync('admin123', 10), // Default password: admin123
     referral_code: 'ADMIN001',
     referred_by: null,
-    balance: 0,
+    balance: 0, // This is now the investment profit balance (withdrawable)
+    recharge_balance: 0, // This is the recharge-only balance (non-withdrawable)
     total_invested: 0,
     total_withdrawn: 0,
     created_at: new Date().toISOString(),

@@ -45,14 +45,15 @@ router.post('/request', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'UPI ID is required for UPI withdrawal' });
     }
 
-    // Check if user has enough balance
+    // Check if user has enough balance (profit balance, not recharge balance)
     const user = users.find(u => u.id === userId);
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
 
+    // Only allow withdrawals from profit balance (user.balance), not from recharge_balance
     if (user.balance < amount) {
-      return res.status(400).json({ error: 'Insufficient balance' });
+      return res.status(400).json({ error: 'Insufficient profit balance. You can only withdraw profits from investments.' });
     }
 
     if (amount < 100) {

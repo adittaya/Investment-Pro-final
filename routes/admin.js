@@ -92,7 +92,17 @@ router.get('/transactions', authenticateToken, requireAdmin, (req, res) => {
 // Get all withdrawals
 router.get('/withdrawals', authenticateToken, requireAdmin, (req, res) => {
   try {
-    return res.status(200).json(withdrawals);
+    // Enhance withdrawals with user details
+    const enhancedWithdrawals = withdrawals.map(withdrawal => {
+      const user = users.find(u => u.id === withdrawal.user_id);
+      return {
+        ...withdrawal,
+        user_phone: user ? user.phone_number : 'Unknown',
+        user_username: user ? user.username : 'Unknown'
+      };
+    });
+    
+    return res.status(200).json(enhancedWithdrawals);
   } catch (error) {
     console.error('Error getting withdrawals:', error);
     return res.status(500).json({ error: 'Internal server error' });
@@ -102,7 +112,17 @@ router.get('/withdrawals', authenticateToken, requireAdmin, (req, res) => {
 // Get all recharges
 router.get('/recharges', authenticateToken, requireAdmin, (req, res) => {
   try {
-    return res.status(200).json(recharges);
+    // Enhance recharges with user details
+    const enhancedRecharges = recharges.map(recharge => {
+      const user = users.find(u => u.id === recharge.user_id);
+      return {
+        ...recharge,
+        user_phone: user ? user.phone_number : 'Unknown',
+        user_username: user ? user.username : 'Unknown'
+      };
+    });
+    
+    return res.status(200).json(enhancedRecharges);
   } catch (error) {
     console.error('Error getting recharges:', error);
     return res.status(500).json({ error: 'Internal server error' });
@@ -225,11 +245,11 @@ router.post('/verify-utr', authenticateToken, requireAdmin, async (req, res) => 
       recharges[rechargeIndex].status = newStatus;
       recharges[rechargeIndex].processed_at = new Date().toISOString();
 
-      // If approved, add the amount to user's balance
+      // If approved, add the amount to user's recharge_balance
       if (action === 'approve') {
         const userIndex = users.findIndex(u => u.id === recharge.user_id);
         if (userIndex !== -1) {
-          users[userIndex].balance += recharge.amount;
+          users[userIndex].recharge_balance += recharge.amount;
         }
 
         // Add transaction record

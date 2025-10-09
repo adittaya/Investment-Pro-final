@@ -40,9 +40,9 @@ router.post('/purchase', authenticateToken, async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Check if user has enough balance
-    if (user.balance < product.price) {
-      return res.status(400).json({ error: 'Insufficient balance' });
+    // Check if user has enough recharge_balance
+    if (user.recharge_balance < product.price) {
+      return res.status(400).json({ error: 'Insufficient recharge balance' });
     }
 
     // Check if user has already purchased this product in the current month
@@ -66,11 +66,12 @@ router.post('/purchase', authenticateToken, async (req, res) => {
     const endDate = new Date(purchaseDate);
     endDate.setDate(purchaseDate.getDate() + product.duration);
 
-    // Update user balance and investment totals
+    // Update user recharge_balance and investment totals
     const userIndex = users.findIndex(u => u.id === userId);
     if (userIndex !== -1) {
-      users[userIndex].balance -= product.price;
+      users[userIndex].recharge_balance -= product.price;
       users[userIndex].total_invested += product.price;
+      // Move the amount from recharge_balance to balance (now considered invested and generating profit)
     }
 
     // Create user product record
