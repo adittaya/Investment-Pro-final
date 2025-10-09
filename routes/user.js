@@ -70,12 +70,44 @@ router.get('/transactions', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId;
     
-    // Get user's transactions
+    // Get user's completed transactions
     const userTransactions = transactions
       .filter(t => t.user_id === userId)
       .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)); // Sort by newest first
     
-    return res.status(200).json(userTransactions);
+    // Get user's pending withdrawals
+    const pendingWithdrawals = withdrawals
+      .filter(w => w.user_id === userId && w.status === 'pending')
+      .map(w => ({
+        id: w.id,
+        user_id: w.user_id,
+        type: 'withdrawal_pending',
+        amount: w.amount,
+        status: 'pending',
+        description: `Pending withdrawal request via ${w.method}`,
+        created_at: w.created_at
+      }))
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    
+    // Get user's pending recharges
+    const pendingRecharges = recharges
+      .filter(r => r.user_id === userId && r.status === 'pending')
+      .map(r => ({
+        id: r.id,
+        user_id: r.user_id,
+        type: 'recharge_pending',
+        amount: r.amount,
+        status: 'pending',
+        description: 'Pending recharge request',
+        created_at: r.created_at
+      }))
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    
+    // Combine all transactions and sort by date
+    const allTransactions = [...userTransactions, ...pendingWithdrawals, ...pendingRecharges]
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    
+    return res.status(200).json(allTransactions);
   } catch (error) {
     console.error('User transactions fetch error:', error);
     return res.status(500).json({ error: 'Internal server error' });

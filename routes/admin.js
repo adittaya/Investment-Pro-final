@@ -177,11 +177,24 @@ router.post('/user/:userId/balance', authenticateToken, requireAdmin, (req, res)
       return res.status(400).json({ error: 'Reason is required' });
     }
 
-    // Find user
-    const userIndex = users.findIndex(u => u.id === userId);
+    // Find user by ID, phone number, or username
+    let userIndex = users.findIndex(u => u.id === userId);
+    
+    // If not found by ID, try to find by phone number
     if (userIndex === -1) {
-      return res.status(404).json({ error: 'User not found' });
+      userIndex = users.findIndex(u => u.phone_number === userId);
     }
+    
+    // If not found by phone number, try to find by username
+    if (userIndex === -1) {
+      userIndex = users.findIndex(u => u.username === userId);
+    }
+    
+    if (userIndex === -1) {
+      return res.status(404).json({ error: 'User not found. Please enter a valid User ID, Phone Number, or Username.' });
+    }
+    
+    const user = users[userIndex];
 
     // Update user balance
     users[userIndex].balance += parseFloat(amount);
@@ -303,11 +316,31 @@ router.put('/withdrawal/:withdrawalId', authenticateToken, requireAdmin, async (
     if (withdrawalIndex !== -1) {
       withdrawals[withdrawalIndex].status = status;
       withdrawals[withdrawalIndex].processed_at = new Date().toISOString();
-    }
 
-    return res.status(200).json({ 
-      message: `Withdrawal ${status} successfully` 
-    });
+      // If approved, deduct the amount from user's balance and update totals
+      if (status === 'approved') {
+        const userIndex = users.findIndex(u => u.id === withdrawal.user_id);
+        if (userIndex !== -1) {
+          // Deduct the amount from user's profit balance (not recharge balance)
+          users[userIndex].balance -= withdrawal.amount;
+          users[userIndex].total_withdrawn += withdrawal.amount;
+        }
+
+        // Add transaction record
+        const newTransaction = {
+          id: `trans-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          user_id: withdrawal.user_id,
+          type: 'withdrawal',
+          amount: withdrawal.amount,
+          status: 'completed',
+          description: `Withdrawal via ${withdrawal.method}: ${withdrawal.method === 'bank' ? withdrawal.bank_name : withdrawal.upi_id}`,
+          reference_id: withdrawalId,
+          created_at: new Date().toISOString()
+        };
+
+        transactions.push(newTransaction);
+      }
+    }
   } catch (error) {
     console.error('Error updating withdrawal:', error);
     return res.status(500).json({ error: 'Internal server error' });

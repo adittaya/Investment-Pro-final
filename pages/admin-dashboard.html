@@ -246,10 +246,11 @@
                     <form id="addBalanceForm">
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2" for="userId">
-                                User ID
+                                User ID, Phone Number, or Username
                             </label>
                             <input type="text" id="userId" name="user_id" required
-                                class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                class="input-field w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Enter User ID, Phone Number, or Username">
                         </div>
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2" for="amount">
@@ -359,6 +360,7 @@
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User ID</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
@@ -371,7 +373,7 @@
                             <tbody id="usersTableBody" class="bg-white divide-y divide-gray-200">
                                 <!-- Users data will be loaded here -->
                                 <tr>
-                                    <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+                                    <td colspan="8" class="px-6 py-4 text-center text-gray-500">
                                         Loading users...
                                     </td>
                                 </tr>
@@ -500,7 +502,7 @@
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Method</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment Details</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
@@ -947,6 +949,7 @@
                             data.forEach(user => {
                                 tableHTML += `
                                     <tr class="transaction-item py-3">
+                                        <td class="px-6 py-4 text-gray-600 text-xs">${user.id || 'N/A'}</td>
                                         <td class="px-6 py-4 text-gray-600">${user.name || 'N/A'}</td>
                                         <td class="px-6 py-4 text-gray-600">${user.username || 'N/A'}</td>
                                         <td class="px-6 py-4 text-gray-600">${user.phone_number || 'N/A'}</td>
@@ -1039,12 +1042,31 @@
                         if (withdrawalsResponse.ok && data.length > 0) {
                             let tableHTML = '';
                             data.forEach(withdrawal => {
+                                // Format payment details based on method
+                                let paymentDetails = 'N/A';
+                                if (withdrawal.method === 'bank') {
+                                    paymentDetails = `
+                                        <div>
+                                            <div><strong>Bank:</strong> ${withdrawal.bank_name || 'N/A'}</div>
+                                            <div><strong>Account:</strong> ${withdrawal.account_number || 'N/A'}</div>
+                                            <div><strong>IFSC:</strong> ${withdrawal.ifsc_code || 'N/A'}</div>
+                                            <div><strong>Holder:</strong> ${withdrawal.account_holder_name || 'N/A'}</div>
+                                        </div>
+                                    `;
+                                } else if (withdrawal.method === 'upi') {
+                                    paymentDetails = `
+                                        <div>
+                                            <div><strong>UPI ID:</strong> ${withdrawal.upi_id || 'N/A'}</div>
+                                        </div>
+                                    `;
+                                }
+                                
                                 tableHTML += `
                                     <tr class="transaction-item py-3">
                                         <td class="px-6 py-4 text-gray-600">${withdrawal.user_phone || withdrawal.user_id || 'N/A'}</td>
                                         <td class="px-6 py-4 text-gray-600">${withdrawal.user_username || 'N/A'}</td>
                                         <td class="px-6 py-4 text-gray-600">${formatCurrency(withdrawal.amount)}</td>
-                                        <td class="px-6 py-4 text-gray-600">${withdrawal.method || 'N/A'}</td>
+                                        <td class="px-6 py-4 text-gray-600">${paymentDetails}</td>
                                         <td class="px-6 py-4 text-gray-600">
                                             <span class="status-badge ${
                                                 withdrawal.status === 'approved' 
@@ -1291,28 +1313,48 @@
             }
 
             // Find the recharge to get its UTR number
-            let utrNumber = rechargeId;
-            
+            // We need to get the recharge data first to extract the UTR number
             try {
-                const response = await fetch(CONFIG.API_BASE_URL + '/api/admin/verify-utr', {
-                    method: 'POST',
+                // Get all recharges to find the one we're approving
+                const rechargesResponse = await fetch(CONFIG.API_BASE_URL + '/api/admin/recharges', {
+                    method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        utr: utrNumber,
-                        action: status === 'completed' ? 'approve' : 'reject'
-                    })
+                    }
                 });
+                
+                if (rechargesResponse.ok) {
+                    const recharges = await rechargesResponse.json();
+                    const recharge = recharges.find(r => r.id === rechargeId);
+                    
+                    if (recharge && recharge.utr_number) {
+                        // Found the recharge and it has a UTR number
+                        const response = await fetch(CONFIG.API_BASE_URL + '/api/admin/verify-utr', {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                utr: recharge.utr_number,
+                                action: status === 'completed' ? 'approve' : 'reject'
+                            })
+                        });
 
-                if (response.ok) {
-                    alert(`Recharge ${status} successfully`);
-                    // Reload the recharges section to show the updated status
-                    loadSection('recharges');
+                        if (response.ok) {
+                            alert(`Recharge ${status} successfully`);
+                            // Reload the recharges section to show the updated status
+                            loadSection('recharges');
+                        } else {
+                            const result = await response.json();
+                            alert(result.error || 'Failed to update recharge status');
+                        }
+                    } else {
+                        alert('Recharge request not found or UTR number not submitted by user');
+                    }
                 } else {
-                    const result = await response.json();
-                    alert(result.error || 'Failed to update recharge status');
+                    alert('Failed to fetch recharge data');
                 }
             } catch (error) {
                 console.error('Error updating recharge:', error);
